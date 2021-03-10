@@ -74,7 +74,7 @@ ScreenLogin.propTypes = {
 const mapDispatchToProps = (dispatch) => ({
   onSubmit(authData) {
     dispatch(login(authData));
-  }
+  },
 });
 
 export {ScreenLogin};

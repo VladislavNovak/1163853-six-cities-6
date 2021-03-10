@@ -29,8 +29,6 @@ const reducer = (state = initialState, action) => {
       return {...state, activeSort: action.payload};
     case ActionType.REQUIRED_AUTHORIZATION:
       return {...state, authorizationStatus: action.payload};
-    case ActionType.LOGOUT:
-      return {...state, authorizationStatus: action.payload};
     case ActionType.LOAD_COMMENTS:
       return {...state, comments: action.payload};
     case ActionType.SET_ACTIVE_HOTEL:

@@ -35,22 +35,16 @@ export const checkAuth = () => (dispatch, _getState, api) => (
 
 export const login = ({login: email, password}) => (dispatch, _getState, api) => (
   api.post(ServerRequest.LOGIN, {email, password})
-    .then(() => {
+    .then(({data}) => {
       dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH));
+      dispatch(ActionCreator.loadUserEmail(data[`email`]));
       dispatch(ActionCreator.redirectToRoute(JumpTo.ROOT));
     })
 );
 
-export const logout = () => (dispatch, _getState, api) => (
-  api.get(ServerRequest.LOGOUT)
-    .then(() => {
-      dispatch(ActionCreator.logout(AuthorizationStatus.NO_AUTH));
-    })
-);
 
 // Как это работает на примере асинхронного экшена fetchHotels.
 //    Это функция, которая возвращает другую функцию, которой thunk докидывает параметры dispatch, _getState, api
 //    это позволит передать middlewate этот api
 //    Далее - axios.get возвращает json.response, далее - then и когда промис зарезолвится, делаем dispatch
 // checkAuth - необходима для проверки авторизован ли пользователь
-// login - необходим, чтобы залогиниться

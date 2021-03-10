@@ -66,7 +66,7 @@ export const ActionCreator = {
   loadUserEmail: (email) => ({
     type: ActionType.LOAD_USER_EMAIL,
     payload: email,
-  })
+  }),
 };
 
 // Логика:
