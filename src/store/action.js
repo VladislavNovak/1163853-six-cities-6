@@ -1,7 +1,7 @@
 export const ActionType = {
   LOAD_HOTELS: `server/loadHotels`,
   LOAD_NEARBY_HOTELS: `server/loadNearbyHotels`,
-  SET_ACTIVE_HOTEL: `hotel/setActiveHotel`,
+  LOAD_ACTIVE_HOTEL: `hotel/loadActiveHotel`,
   LOAD_COMMENTS: `server/loadComments`,
   SET_ACTIVE_CITY: `screenMain/setActiveCity`,
   HIGHLIGHT_HOTEL_ID: `hotel/highlightHotelID`,
@@ -23,8 +23,8 @@ export const ActionCreator = {
     payload: hotels,
   }),
 
-  setActiveHotel: (hotel) => ({
-    type: ActionType.SET_ACTIVE_HOTEL,
+  loadActiveHotel: (hotel) => ({
+    type: ActionType.LOAD_ACTIVE_HOTEL,
     payload: hotel,
   }),
 

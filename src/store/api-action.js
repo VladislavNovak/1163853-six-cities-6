@@ -1,5 +1,5 @@
 import {adaptAllCommentsToClient} from '../services/commentAdapter';
-import {adaptAllHotelsToClient} from '../services/hotelAdapter';
+import {adaptAllHotelsToClient, adaptOneHotelToClient} from '../services/hotelAdapter';
 import {AuthorizationStatus, JumpTo, ServerRequest} from '../utils/constants';
 import {ActionCreator} from './action';
 
@@ -7,6 +7,13 @@ export const fetchHotels = () => (dispatch, _getState, api) => (
   api.get(ServerRequest.HOTELS).then(({data}) => {
     const hotels = adaptAllHotelsToClient(data);
     dispatch(ActionCreator.loadHotels(hotels));
+  })
+);
+
+export const fetchActiveHotel = (id) => (dispatch, _getState, api) => (
+  api.get(`${ServerRequest.HOTELS}/${id}`).then(({data}) => {
+    const hotel = adaptOneHotelToClient(data);
+    dispatch(ActionCreator.loadActiveHotel(hotel));
   })
 );
 

@@ -7,6 +7,7 @@ const initialState = {
   hotels: [],
   nearbyHotels: [],
   activeHotel: {},
+  isActiveHotelLoad: false,
   activeCity: null,
   comments: [],
   highlightHotelID: ``,
@@ -31,8 +32,8 @@ const reducer = (state = initialState, action) => {
       return {...state, authorizationStatus: action.payload};
     case ActionType.LOAD_COMMENTS:
       return {...state, comments: action.payload};
-    case ActionType.SET_ACTIVE_HOTEL:
-      return {...state, activeHotel: action.payload};
+    case ActionType.LOAD_ACTIVE_HOTEL:
+      return {...state, isActiveHotelLoad: true, activeHotel: action.payload};
     case ActionType.LOAD_USER_EMAIL:
       return {...state, userEmail: action.payload};
     default:

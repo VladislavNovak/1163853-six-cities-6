@@ -12,7 +12,6 @@ const Hotel = ({
   isRenderNearestHotels,
   onClickHotel,
   onMouseOverHotel,
-  onClickGetActiveHotel,
 }) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
   const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
@@ -22,7 +21,6 @@ const Hotel = ({
       onClick={(evt) => {
         evt.preventDefault();
         onClickHotel(id);
-        onClickGetActiveHotel(hotel);
       }}
       onMouseOver={(evt) => {
         evt.preventDefault();
@@ -88,16 +86,11 @@ Hotel.propTypes = {
   isRenderNearestHotels: PropTypes.bool.isRequired,
   onClickHotel: PropTypes.func.isRequired,
   onMouseOverHotel: PropTypes.func.isRequired,
-  onClickGetActiveHotel: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   onMouseOverHotel(id) {
     dispatch(ActionCreator.highlightHotelID(id));
-  },
-
-  onClickGetActiveHotel(hotel) {
-    dispatch(ActionCreator.setActiveHotel(hotel));
   },
 });
 

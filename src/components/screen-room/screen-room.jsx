@@ -2,22 +2,32 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {hotelStructure, reviewStructure} from '../../utils/types';
-import {RATING_MULTIPLIER, RenderType, MapType} from '../../utils/constants';
-import {getPlace} from '../../utils';
-import {fetchComments, fetchNearbyHotels} from '../../store/api-action';
+import {RATING_MULTIPLIER, RenderType, MapType, WarningType} from '../../utils/constants';
+import {getPlace, isHotelIDFound} from '../../utils';
+import {fetchActiveHotel, fetchComments, fetchNearbyHotels} from '../../store/api-action';
 
-import {HotelsList, Review, Map, Header} from '../../components';
+import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
-const ScreenRoom = ({hotel, hotels, nearbyHotels, comments, onClickHotel, getIDToServerRequest}) => {
-  const {id, isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
-  const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
+const ScreenRoom = ({id, isActiveHotelLoad, activeHotel: hotel, hotels, nearbyHotels, comments, onClickHotel, getIDToServerRequest}) => {
 
-  const currentCity = getPlace(hotels, cityName);
-  const threeNearestHotels = nearbyHotels.slice(0, 3);
+  if (!isHotelIDFound(hotels, id)) {
+    return <ScreenWarning warning={WarningType.INVALID_HOTEL_ID} />;
+  }
 
   useEffect(() => {
-    getIDToServerRequest(id);
-  }, [id]);
+    if (!isActiveHotelLoad) {
+      getIDToServerRequest(id);
+    }
+  }, [id, isActiveHotelLoad]);
+
+  if (!isActiveHotelLoad) {
+    return <ScreenLoading />;
+  }
+
+  const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
+  const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
+  const currentCity = getPlace(hotels, cityName);
+  const threeNearestHotels = nearbyHotels.slice(0, 3);
 
   return (
     <div className="page">
@@ -139,7 +149,9 @@ const ScreenRoom = ({hotel, hotels, nearbyHotels, comments, onClickHotel, getIDT
 };
 
 ScreenRoom.propTypes = {
-  hotel: PropTypes.shape(hotelStructure).isRequired,
+  id: PropTypes.string.isRequired,
+  isActiveHotelLoad: PropTypes.bool.isRequired,
+  activeHotel: PropTypes.shape(hotelStructure).isRequired,
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
   nearbyHotels: PropTypes.arrayOf(hotelStructure).isRequired,
   comments: PropTypes.arrayOf(reviewStructure).isRequired,
@@ -147,9 +159,10 @@ ScreenRoom.propTypes = {
   getIDToServerRequest: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({comments, nearbyHotels}) => ({comments, nearbyHotels});
+const mapStateToProps = ({isActiveHotelLoad, activeHotel, comments, nearbyHotels}) => ({isActiveHotelLoad, activeHotel, comments, nearbyHotels});
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
+    dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));
   },
