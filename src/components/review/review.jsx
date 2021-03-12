@@ -5,20 +5,17 @@ import {FIVE_STARS, RATING_MULTIPLIER, ReviewLength} from '../../utils/constants
 import {reviewStructure} from '../../utils/types';
 
 const Review = ({comments}) => {
-  const [selected, setSelected] = React.useState(0);
+  const [selectedStars, setSelectedStars] = React.useState(0);
   const [tale, setTale] = React.useState(``);
 
-  const handleChangeRadio = ({target}) => {
-    setSelected(target.value);
-  };
-
+  const handleChangeRadio = ({target}) => setSelectedStars(target.value);
   const handleChangeTextarea = ({target}) => setTale(target.value);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
   };
 
-  const allowSendingForm = () => !(tale.length > ReviewLength.MIN && tale.length < ReviewLength.MAX && selected);
+  const allowSendingForm = () => !(tale.length > ReviewLength.MIN && tale.length < ReviewLength.MAX && selectedStars);
 
   return (
     <section className="property__reviews reviews">
@@ -64,8 +61,8 @@ const Review = ({comments}) => {
                 className="form__rating-input visually-hidden"
                 name="rating"
                 onChange={handleChangeRadio}
-                checked={selected === `${star}-stars`}
-                value={`${star}-stars`}
+                checked={selectedStars === star}
+                value={star}
                 id={`${star}-stars`}
                 type="radio" />
               <label htmlFor={`${star}-stars`} className="reviews__rating-label form__rating-label" title="perfect">

@@ -1,6 +1,6 @@
 export const RATING_MULTIPLIER = 20;
 export const NOT_INITIALIZED = -1;
-export const FIVE_STARS = [1, 2, 3, 4, 5];
+export const FIVE_STARS = [`1`, `2`, `3`, `4`, `5`];
 export const REGULAR_EMAIL_TEMPLATE = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
 export const MapType = {
