@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {FIVE_STARS, LoadingStatus, RATING_MULTIPLIER, ReviewLength} from '../../utils/constants';
 import {reviewStructure} from '../../utils/types';
 import {ActionCreator} from '../../store/action';
+import {Textarea} from './review-stile';
 
 const Review = ({
   comments,
@@ -15,13 +16,20 @@ const Review = ({
   const [selectedStars, setSelectedStars] = React.useState(0);
   const [tale, setTale] = React.useState(``);
 
-  const handleChangeRadio = ({target}) => setSelectedStars(target.value);
-  const handleChangeTextarea = ({target}) => setTale(target.value);
+  const handleChangeRadio = ({target}) => {
+    changeLastCommentLoadingStatus(LoadingStatus.DEFAULT);
+    setSelectedStars(target.value);
+  };
+
+  const handleChangeTextarea = ({target}) => {
+    changeLastCommentLoadingStatus(LoadingStatus.DEFAULT);
+    setTale(target.value);
+  };
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
     onSubmitSendComment({
-      commen: tale,
+      comment: tale,
       rating: Number(selectedStars),
     });
   };
@@ -98,13 +106,15 @@ const Review = ({
             </React.Fragment>
           ))}
         </div>
-        <textarea
-          className="reviews__textarea form__textarea"
+        <Textarea
+          warningStyle={(lastCommentLoadingStatus === LoadingStatus.ERROR) && `5px solid #FF0000`}
           id="review"
           name="review"
           onChange={handleChangeTextarea}
           value={tale}
-          placeholder="Tell how was your stay, what you like and what can be improved" />
+          placeholder={(lastCommentLoadingStatus === LoadingStatus.ERROR)
+            ? `The comment cannot be posted to the server at this time. The data may be incorrect. Or try next time`
+            : `Tell how was your stay, what you like and what can be improved`} />
         <div className="reviews__button-wrapper">
           <p className="reviews__help">
             To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
