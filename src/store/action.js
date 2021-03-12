@@ -2,6 +2,7 @@ export const ActionType = {
   LOAD_HOTELS: `server/loadHotels`,
   LOAD_NEARBY_HOTELS: `server/loadNearbyHotels`,
   LOAD_ACTIVE_HOTEL: `hotel/loadActiveHotel`,
+  RELOAD_ACTIVE_HOTEL: `server/reloadActiveHotel`,
   LOAD_COMMENTS: `server/loadComments`,
   SET_ACTIVE_CITY: `screenMain/setActiveCity`,
   HIGHLIGHT_HOTEL_ID: `hotel/highlightHotelID`,
@@ -26,6 +27,11 @@ export const ActionCreator = {
   loadActiveHotel: (hotel) => ({
     type: ActionType.LOAD_ACTIVE_HOTEL,
     payload: hotel,
+  }),
+
+  reloadActiveHotel: (status) => ({
+    type: ActionType.RELOAD_ACTIVE_HOTEL,
+    payload: status,
   }),
 
   setActiveCity: (activeCity) => ({

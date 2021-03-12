@@ -5,22 +5,23 @@ import {hotelStructure, reviewStructure} from '../../utils/types';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType} from '../../utils/constants';
 import {getPlace, isHotelIDFound} from '../../utils';
 import {fetchActiveHotel, fetchComments, fetchNearbyHotels} from '../../store/api-action';
+import {ActionCreator} from '../../store/action';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
-const ScreenRoom = ({id, isActiveHotelLoad, activeHotel: hotel, hotels, nearbyHotels, comments, onClickHotel, getIDToServerRequest}) => {
+const ScreenRoom = ({id, activeHotel: hotel, hotels, nearbyHotels, comments, onClickHotel, getIDToServerRequest, activeHotelReloaded}) => {
 
   if (!isHotelIDFound(hotels, id)) {
     return <ScreenWarning warning={WarningType.INVALID_HOTEL_ID} />;
   }
 
   useEffect(() => {
-    if (!isActiveHotelLoad) {
+    if (!activeHotelReloaded) {
       getIDToServerRequest(id);
     }
-  }, [id, isActiveHotelLoad]);
+  }, [activeHotelReloaded]);
 
-  if (!isActiveHotelLoad) {
+  if (!activeHotelReloaded) {
     return <ScreenLoading />;
   }
 
@@ -150,7 +151,7 @@ const ScreenRoom = ({id, isActiveHotelLoad, activeHotel: hotel, hotels, nearbyHo
 
 ScreenRoom.propTypes = {
   id: PropTypes.string.isRequired,
-  isActiveHotelLoad: PropTypes.bool.isRequired,
+  activeHotelReloaded: PropTypes.bool.isRequired,
   activeHotel: PropTypes.shape(hotelStructure).isRequired,
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
   nearbyHotels: PropTypes.arrayOf(hotelStructure).isRequired,
@@ -159,9 +160,10 @@ ScreenRoom.propTypes = {
   getIDToServerRequest: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({isActiveHotelLoad, activeHotel, comments, nearbyHotels}) => ({isActiveHotelLoad, activeHotel, comments, nearbyHotels});
+const mapStateToProps = ({activeHotel, comments, nearbyHotels, activeHotelReloaded}) => ({activeHotel, comments, nearbyHotels, activeHotelReloaded});
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
+    dispatch(ActionCreator.reloadActiveHotel(false));
     dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));
