@@ -31,13 +31,20 @@ export const JumpTo = {
 export const ServerRequest = {
   HOTELS: `/hotels`,
   LOGIN: `/login`,
-  COMMENTS: `/comments/`,
+  COMMENTS: `/comments`,
   NEARBY: `/nearby`,
 };
 
 export const ReviewLength = {
   MIN: 49,
   MAX: 300
+};
+
+export const LoadingStatus = {
+  DEFAULT: `DEFAULT`,
+  SENT: `SENT`,
+  RECEIVED: `RECEIVED`,
+  ERROR: `ERROR`,
 };
 
 export const SortType = {

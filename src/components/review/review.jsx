@@ -1,10 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
-import {FIVE_STARS, RATING_MULTIPLIER, ReviewLength} from '../../utils/constants';
+import {connect} from 'react-redux';
+import {FIVE_STARS, LoadingStatus, RATING_MULTIPLIER, ReviewLength} from '../../utils/constants';
 import {reviewStructure} from '../../utils/types';
+import {ActionCreator} from '../../store/action';
 
-const Review = ({comments}) => {
+const Review = ({
+  comments,
+  onSubmitSendComment,
+  lastCommentLoadingStatus,
+  changeLastCommentLoadingStatus
+}) => {
   const [selectedStars, setSelectedStars] = React.useState(0);
   const [tale, setTale] = React.useState(``);
 
@@ -13,7 +20,25 @@ const Review = ({comments}) => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    onSubmitSendComment({
+      commen: tale,
+      rating: Number(selectedStars),
+    });
   };
+
+  useEffect(() => {
+    if (lastCommentLoadingStatus === LoadingStatus.RECEIVED) {
+      setTale(``);
+      setSelectedStars(0);
+      changeLastCommentLoadingStatus(LoadingStatus.DEFAULT);
+    }
+
+    if (lastCommentLoadingStatus === LoadingStatus.ERROR) {
+      setTale(``);
+      setSelectedStars(0);
+    }
+
+  }, [lastCommentLoadingStatus]);
 
   const allowSendingForm = () => !(tale.length > ReviewLength.MIN && tale.length < ReviewLength.MAX && selectedStars);
 
@@ -86,7 +111,7 @@ const Review = ({comments}) => {
           </p>
           <button
             className="reviews__submit form__submit button"
-            disabled={allowSendingForm()}
+            disabled={allowSendingForm() || lastCommentLoadingStatus === LoadingStatus.SENT}
             type="submit">Submit</button>
         </div>
       </form>
@@ -96,6 +121,18 @@ const Review = ({comments}) => {
 
 Review.propTypes = ({
   comments: PropTypes.arrayOf(reviewStructure).isRequired,
+  onSubmitSendComment: PropTypes.func.isRequired,
+  changeLastCommentLoadingStatus: PropTypes.func.isRequired,
+  lastCommentLoadingStatus: PropTypes.string.isRequired,
 });
 
-export default Review;
+const mapStateToProps = ({lastCommentLoadingStatus}) => ({lastCommentLoadingStatus});
+
+const mapDispatchToProps = (dispatch) => ({
+  changeLastCommentLoadingStatus(status) {
+    dispatch(ActionCreator.setLastCommentLoadingStatus(status));
+  }
+});
+
+export {Review};
+export default connect(mapStateToProps, mapDispatchToProps)(Review);

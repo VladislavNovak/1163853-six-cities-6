@@ -1,6 +1,6 @@
 import {adaptAllCommentsToClient} from '../services/commentAdapter';
 import {adaptAllHotelsToClient, adaptOneHotelToClient} from '../services/hotelAdapter';
-import {AuthorizationStatus, JumpTo, ServerRequest} from '../utils/constants';
+import {AuthorizationStatus, JumpTo, LoadingStatus, ServerRequest} from '../utils/constants';
 import {ActionCreator} from './action';
 
 export const fetchHotels = () => (dispatch, _getState, api) => (
@@ -15,7 +15,6 @@ export const fetchActiveHotel = (id) => (dispatch, _getState, api) => (
     const hotel = adaptOneHotelToClient(data);
     dispatch(ActionCreator.loadActiveHotel(hotel));
     dispatch(ActionCreator.reloadActiveHotel(true));
-    console.log(`fetchActiveHotel`);
   })
 );
 
@@ -23,15 +22,21 @@ export const fetchNearbyHotels = (id) => (dispatch, _getState, api) => (
   api.get(`${ServerRequest.HOTELS}/${id}${ServerRequest.NEARBY}`).then(({data}) => {
     const nearbyHotels = adaptAllHotelsToClient(data);
     dispatch(ActionCreator.loadNearestHotels(nearbyHotels));
-    console.log(`fetchNearbyHotels`);
   })
 );
 
 export const fetchComments = (id) => (dispatch, _getState, api) => (
-  api.get(`${ServerRequest.COMMENTS}${id}`).then(({data}) => {
+  api.get(`${ServerRequest.COMMENTS}/${id}`).then(({data}) => {
     const comments = adaptAllCommentsToClient(data);
     dispatch(ActionCreator.loadComments(comments));
-    console.log(`fetchComments`);
+  })
+);
+
+export const sendUpdatedComment = ({id, comment, rating}) => (dispatch, _getState, api) => (
+  api.post(`${ServerRequest.COMMENTS}/${id}`, {comment, rating}).then(({data}) => {
+    const comments = adaptAllCommentsToClient(data);
+    dispatch(ActionCreator.loadComments(comments));
+    dispatch(ActionCreator.setLastCommentLoadingStatus(LoadingStatus.RECEIVED));
   })
 );
 

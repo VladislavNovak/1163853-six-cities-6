@@ -2,14 +2,25 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {hotelStructure, reviewStructure} from '../../utils/types';
-import {RATING_MULTIPLIER, RenderType, MapType, WarningType} from '../../utils/constants';
+import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
 import {getPlace, isHotelIDFound} from '../../utils';
-import {fetchActiveHotel, fetchComments, fetchNearbyHotels} from '../../store/api-action';
+import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment} from '../../store/api-action';
 import {ActionCreator} from '../../store/action';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
-const ScreenRoom = ({id, activeHotel: hotel, hotels, nearbyHotels, comments, onClickHotel, getIDToServerRequest, activeHotelReloaded}) => {
+const ScreenRoom = ({
+  id,
+  activeHotel: hotel,
+  hotels,
+  nearbyHotels,
+  comments,
+  onClickHotel,
+  getIDToServerRequest,
+  activeHotelReloaded,
+  sendCommentToServer,
+  changeLastCommentLoadingStatus,
+}) => {
 
   if (!isHotelIDFound(hotels, id)) {
     return <ScreenWarning warning={WarningType.INVALID_HOTEL_ID} />;
@@ -24,6 +35,12 @@ const ScreenRoom = ({id, activeHotel: hotel, hotels, nearbyHotels, comments, onC
   if (!activeHotelReloaded) {
     return <ScreenLoading />;
   }
+
+  const extendComment = (comment) => {
+    sendCommentToServer({...comment, id}).catch(() => {
+      changeLastCommentLoadingStatus(LoadingStatus.ERROR);
+    });
+  };
 
   const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
   const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
@@ -127,7 +144,9 @@ const ScreenRoom = ({id, activeHotel: hotel, hotels, nearbyHotels, comments, onC
                   )
                 }
               </div>
-              <Review comments={comments} />
+              <Review
+                onSubmitSendComment={extendComment}
+                comments={comments} />
             </div>
           </div>
           <Map
@@ -158,6 +177,8 @@ ScreenRoom.propTypes = {
   comments: PropTypes.arrayOf(reviewStructure).isRequired,
   onClickHotel: PropTypes.func.isRequired,
   getIDToServerRequest: PropTypes.func.isRequired,
+  sendCommentToServer: PropTypes.func.isRequired,
+  changeLastCommentLoadingStatus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({activeHotel, comments, nearbyHotels, activeHotelReloaded}) => ({activeHotel, comments, nearbyHotels, activeHotelReloaded});
@@ -167,6 +188,15 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));
+  },
+
+  changeLastCommentLoadingStatus(status) {
+    dispatch(ActionCreator.setLastCommentLoadingStatus(status));
+  },
+
+  sendCommentToServer(comment) {
+    dispatch(ActionCreator.setLastCommentLoadingStatus(LoadingStatus.SENT));
+    return dispatch(sendUpdatedComment(comment));
   },
 });
 

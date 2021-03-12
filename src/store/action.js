@@ -4,6 +4,7 @@ export const ActionType = {
   LOAD_ACTIVE_HOTEL: `hotel/loadActiveHotel`,
   RELOAD_ACTIVE_HOTEL: `server/reloadActiveHotel`,
   LOAD_COMMENTS: `server/loadComments`,
+  SET_LAST_COMMENT_LOADING_STATUS: `server/setLastCommentLoadingStatus`,
   SET_ACTIVE_CITY: `screenMain/setActiveCity`,
   HIGHLIGHT_HOTEL_ID: `hotel/highlightHotelID`,
   SET_ACTIVE_SORT: `sortingPlaces/activeSort`,
@@ -42,6 +43,11 @@ export const ActionCreator = {
   loadComments: (comments) => ({
     type: ActionType.LOAD_COMMENTS,
     payload: comments,
+  }),
+
+  setLastCommentLoadingStatus: (status) => ({
+    type: ActionType.SET_LAST_COMMENT_LOADING_STATUS,
+    payload: status,
   }),
 
   highlightHotelID: (id) => ({
