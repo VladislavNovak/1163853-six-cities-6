@@ -1,6 +1,6 @@
 export const RATING_MULTIPLIER = 20;
 export const NOT_INITIALIZED = -1;
-export const FIVE_STARS = [1, 2, 3, 4, 5];
+export const FIVE_STARS = [`1`, `2`, `3`, `4`, `5`];
 export const REGULAR_EMAIL_TEMPLATE = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
 export const MapType = {
@@ -16,7 +16,8 @@ export const RenderType = {
 };
 
 export const WarningType = {
-  INVALID_ADDRESS_BAR: `WHAT THE HELL IS GOING ON HERE`,
+  INVALID_ADDRESS_BAR: `THE REQUESTED RESOURCE IS NOT FOUND`,
+  INVALID_HOTEL_ID: `THIS HOTEL IS NOT EXIST. CHOOSE ANOTHER`,
   LOADING: `...LOADING...`,
 };
 
@@ -30,14 +31,20 @@ export const JumpTo = {
 export const ServerRequest = {
   HOTELS: `/hotels`,
   LOGIN: `/login`,
-  LOGOUT: `/logout`,
-  COMMENTS: `/comments/`,
+  COMMENTS: `/comments`,
   NEARBY: `/nearby`,
 };
 
 export const ReviewLength = {
   MIN: 49,
   MAX: 300
+};
+
+export const LoadingStatus = {
+  DEFAULT: `DEFAULT`,
+  SENT: `SENT`,
+  RECEIVED: `RECEIVED`,
+  ERROR: `ERROR`,
 };
 
 export const SortType = {

@@ -2,22 +2,50 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {hotelStructure, reviewStructure} from '../../utils/types';
-import {RATING_MULTIPLIER, RenderType, MapType} from '../../utils/constants';
-import {getPlace} from '../../utils';
-import {fetchComments, fetchNearbyHotels} from '../../store/api-action';
+import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
+import {getPlace, isHotelIDFound} from '../../utils';
+import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment} from '../../store/api-action';
+import {ActionCreator} from '../../store/action';
 
-import {HotelsList, Review, Map, Header} from '../../components';
+import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
-const ScreenRoom = ({hotel, hotels, nearbyHotels, comments, onClickHotel, getIDToServerRequest}) => {
-  const {id, isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
-  const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
+const ScreenRoom = ({
+  id,
+  activeHotel: hotel,
+  hotels,
+  nearbyHotels,
+  comments,
+  onClickHotel,
+  getIDToServerRequest,
+  activeHotelReloaded,
+  sendCommentToServer,
+  changeLastCommentLoadingStatus,
+}) => {
 
-  const currentCity = getPlace(hotels, cityName);
-  const threeNearestHotels = nearbyHotels.slice(0, 3);
+  if (!isHotelIDFound(hotels, id)) {
+    return <ScreenWarning warning={WarningType.INVALID_HOTEL_ID} />;
+  }
 
   useEffect(() => {
-    getIDToServerRequest(id);
-  }, [id]);
+    if (!activeHotelReloaded) {
+      getIDToServerRequest(id);
+    }
+  }, [activeHotelReloaded]);
+
+  if (!activeHotelReloaded) {
+    return <ScreenLoading />;
+  }
+
+  const extendComment = (comment) => {
+    sendCommentToServer({...comment, id}).catch(() => {
+      changeLastCommentLoadingStatus(LoadingStatus.ERROR);
+    });
+  };
+
+  const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
+  const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
+  const currentCity = getPlace(hotels, cityName);
+  const threeNearestHotels = nearbyHotels.slice(0, 3);
 
   return (
     <div className="page">
@@ -116,7 +144,9 @@ const ScreenRoom = ({hotel, hotels, nearbyHotels, comments, onClickHotel, getIDT
                   )
                 }
               </div>
-              <Review comments={comments} />
+              <Review
+                onSubmitSendComment={extendComment}
+                comments={comments} />
             </div>
           </div>
           <Map
@@ -139,19 +169,34 @@ const ScreenRoom = ({hotel, hotels, nearbyHotels, comments, onClickHotel, getIDT
 };
 
 ScreenRoom.propTypes = {
-  hotel: PropTypes.shape(hotelStructure).isRequired,
+  id: PropTypes.string.isRequired,
+  activeHotelReloaded: PropTypes.bool.isRequired,
+  activeHotel: PropTypes.shape(hotelStructure).isRequired,
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
   nearbyHotels: PropTypes.arrayOf(hotelStructure).isRequired,
   comments: PropTypes.arrayOf(reviewStructure).isRequired,
   onClickHotel: PropTypes.func.isRequired,
   getIDToServerRequest: PropTypes.func.isRequired,
+  sendCommentToServer: PropTypes.func.isRequired,
+  changeLastCommentLoadingStatus: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({comments, nearbyHotels}) => ({comments, nearbyHotels});
+const mapStateToProps = ({activeHotel, comments, nearbyHotels, activeHotelReloaded}) => ({activeHotel, comments, nearbyHotels, activeHotelReloaded});
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
+    dispatch(ActionCreator.reloadActiveHotel(false));
+    dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));
+  },
+
+  changeLastCommentLoadingStatus(status) {
+    dispatch(ActionCreator.setLastCommentLoadingStatus(status));
+  },
+
+  sendCommentToServer(comment) {
+    dispatch(ActionCreator.setLastCommentLoadingStatus(LoadingStatus.SENT));
+    return dispatch(sendUpdatedComment(comment));
   },
 });
 

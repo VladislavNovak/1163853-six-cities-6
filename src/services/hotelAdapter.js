@@ -1,4 +1,4 @@
-const adaptOneHotelToClient = (hotel) => ({
+export const adaptOneHotelToClient = (hotel) => ({
   id: String(hotel.id),
   cityName: hotel.city.name,
   cityLatitude: hotel.city.location.latitude,

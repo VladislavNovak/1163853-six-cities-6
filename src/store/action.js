@@ -1,8 +1,10 @@
 export const ActionType = {
   LOAD_HOTELS: `server/loadHotels`,
   LOAD_NEARBY_HOTELS: `server/loadNearbyHotels`,
-  SET_ACTIVE_HOTEL: `hotel/setActiveHotel`,
+  LOAD_ACTIVE_HOTEL: `hotel/loadActiveHotel`,
+  RELOAD_ACTIVE_HOTEL: `server/reloadActiveHotel`,
   LOAD_COMMENTS: `server/loadComments`,
+  SET_LAST_COMMENT_LOADING_STATUS: `server/setLastCommentLoadingStatus`,
   SET_ACTIVE_CITY: `screenMain/setActiveCity`,
   HIGHLIGHT_HOTEL_ID: `hotel/highlightHotelID`,
   SET_ACTIVE_SORT: `sortingPlaces/activeSort`,
@@ -23,9 +25,14 @@ export const ActionCreator = {
     payload: hotels,
   }),
 
-  setActiveHotel: (hotel) => ({
-    type: ActionType.SET_ACTIVE_HOTEL,
+  loadActiveHotel: (hotel) => ({
+    type: ActionType.LOAD_ACTIVE_HOTEL,
     payload: hotel,
+  }),
+
+  reloadActiveHotel: (status) => ({
+    type: ActionType.RELOAD_ACTIVE_HOTEL,
+    payload: status,
   }),
 
   setActiveCity: (activeCity) => ({
@@ -36,6 +43,11 @@ export const ActionCreator = {
   loadComments: (comments) => ({
     type: ActionType.LOAD_COMMENTS,
     payload: comments,
+  }),
+
+  setLastCommentLoadingStatus: (status) => ({
+    type: ActionType.SET_LAST_COMMENT_LOADING_STATUS,
+    payload: status,
   }),
 
   highlightHotelID: (id) => ({
@@ -66,7 +78,7 @@ export const ActionCreator = {
   loadUserEmail: (email) => ({
     type: ActionType.LOAD_USER_EMAIL,
     payload: email,
-  })
+  }),
 };
 
 // Логика:

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {RATING_MULTIPLIER} from '../../utils/constants';
 import {ActionCreator} from '../../store/action';
 import {hotelStructure} from '../../utils/types';
+import {fetchActiveHotel, fetchComments, fetchNearbyHotels} from '../../store/api-action';
 
 const Hotel = ({
   hotel,
@@ -12,8 +13,7 @@ const Hotel = ({
   isRenderNearestHotels,
   onClickHotel,
   onMouseOverHotel,
-  onClickGetActiveHotel,
-}) => {
+  getIDToServerRequest}) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
   const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
 
@@ -21,8 +21,8 @@ const Hotel = ({
     <article
       onClick={(evt) => {
         evt.preventDefault();
+        getIDToServerRequest(id);
         onClickHotel(id);
-        onClickGetActiveHotel(hotel);
       }}
       onMouseOver={(evt) => {
         evt.preventDefault();
@@ -88,16 +88,19 @@ Hotel.propTypes = {
   isRenderNearestHotels: PropTypes.bool.isRequired,
   onClickHotel: PropTypes.func.isRequired,
   onMouseOverHotel: PropTypes.func.isRequired,
-  onClickGetActiveHotel: PropTypes.func.isRequired,
+  getIDToServerRequest: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onMouseOverHotel(id) {
-    dispatch(ActionCreator.highlightHotelID(id));
+  getIDToServerRequest(id) {
+    dispatch(ActionCreator.reloadActiveHotel(false));
+    dispatch(fetchActiveHotel(id));
+    dispatch(fetchComments(id));
+    dispatch(fetchNearbyHotels(id));
   },
 
-  onClickGetActiveHotel(hotel) {
-    dispatch(ActionCreator.setActiveHotel(hotel));
+  onMouseOverHotel(id) {
+    dispatch(ActionCreator.highlightHotelID(id));
   },
 });
 

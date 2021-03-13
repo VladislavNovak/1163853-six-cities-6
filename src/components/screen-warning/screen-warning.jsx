@@ -1,21 +1,35 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {WarningType} from "../../utils/constants";
+import PropTypes from 'prop-types';
 
-const ScreenWarning = () => {
-  const styleWarning = {
-    textAlign: `center`,
-    fontSize: `28px`,
-    color: `#8B0000`,
-    lineHeight: `26px`,
-  };
+import {
+  NotFoundWrapper,
+  NotFound,
+  NotFound404,
+  NotFound404FirstChildren,
+  NotFoundH1,
+  NotFoundH2,
+  NotFoundP,
+  NotFoundLink} from "./screen-warning-style";
 
+const ScreenWarning = ({warning}) => {
   return (
-    <div style={styleWarning}>
-      <p>{WarningType.INVALID_ADDRESS_BAR}</p>
-      <Link to="/">Вернуться на главную</Link>
-    </div>
+    <NotFoundWrapper>
+      <NotFound>
+        <NotFound404>
+          <NotFound404FirstChildren></NotFound404FirstChildren>
+          <NotFoundH1>404</NotFoundH1>
+        </NotFound404>
+        <NotFoundH2>{warning}</NotFoundH2>
+        <NotFoundP>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</NotFoundP>
+        <NotFoundLink to="/">Вернуться на главную</NotFoundLink>
+      </NotFound>
+    </NotFoundWrapper>
   );
 };
 
+ScreenWarning.propTypes = {
+  warning: PropTypes.string.isRequired,
+};
+
 export default ScreenWarning;
+

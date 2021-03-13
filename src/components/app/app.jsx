@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
 import {hotelStructure} from '../../utils/types';
-import {getMatchingOffer} from '../../utils';
-import {JumpTo} from '../../utils/constants';
+import {JumpTo, WarningType} from '../../utils/constants';
 import browserHistory from '../../browser-history';
 
 import {ScreenMain, ScreenLogin, ScreenFavorites, ScreenRoom, ScreenWarning, ScreenLoading, PrivateRoute} from '..';
@@ -50,14 +49,14 @@ const App = ({hotels, isHotelsLoaded}) => {
           path={`${JumpTo.OFFER}/:id`}
           render={({history, match}) => (
             <ScreenRoom
-              hotel={getMatchingOffer(hotels, match)}
+              id={match.params.id}
               hotels={hotels}
               onClickHotel={(id) => history.push(`${JumpTo.OFFER}/${id}`)}
             />
           )}
         />
         <Route>
-          <ScreenWarning />
+          <ScreenWarning warning={WarningType.INVALID_ADDRESS_BAR} />
         </Route>
       </Switch>
     </BrowserRouter>

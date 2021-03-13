@@ -43,3 +43,9 @@ export const getSortedHotels = (hotels, sortType) => {
     [SortType.TOP_RATED_FIRST]: () => copyHotels.sort((a, b) => b.rating - a.rating),
   }[sortType]());
 };
+
+// Принимает массив отелей и id запрашиваемого отеля
+// Возвращает true, если запрашиваемый отель существует, и false - если отель существует
+export const isHotelIDFound = (hotels, id) => {
+  return hotels.findIndex((item) => item.id === id) >= 0;
+};
