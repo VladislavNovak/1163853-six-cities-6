@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {RenderType, SortType} from '../../utils/constants';
@@ -10,8 +10,22 @@ import {HotelsList} from '..';
 
 const SortingPlaces = ({currentCity, hotels, onClickHotel, activeSort, onClickActiveSort}) => {
   const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
-
+  const sortRef = useRef();
   const sortedHotels = getSortedHotels(hotels, activeSort);
+
+  useEffect(() => {
+    document.body.addEventListener(`click`, handleOutsideClick);
+
+    return () => {
+      document.body.removeEventListener(`click`, handleOutsideClick);
+    };
+  }, []);
+
+  const handleOutsideClick = (evt) => {
+    if (!evt.path.includes(sortRef.current)) {
+      setIsOptionsOpen(false);
+    }
+  };
 
   return (
     <section className="cities__places places">
@@ -20,8 +34,7 @@ const SortingPlaces = ({currentCity, hotels, onClickHotel, activeSort, onClickAc
       <form className="places__sorting" action="#" method="get">
         <span className="places__sorting-caption">Sort by</span>
         <span
-          onClick={(evt) => {
-            evt.preventDefault();
+          onClick={() => {
             setIsOptionsOpen(true);
           }}
           className="places__sorting-type" tabIndex="0">
@@ -31,13 +44,13 @@ const SortingPlaces = ({currentCity, hotels, onClickHotel, activeSort, onClickAc
           </svg>
         </span>
         <ul
+          ref={sortRef}
           className={`places__options places__options--custom ${isOptionsOpen && `places__options--opened` || ``}`}>
           {
             Object.values(SortType).map((sort) => (
               <li
                 key={sort}
-                onClick={(evt) => {
-                  evt.preventDefault();
+                onClick={() => {
                   onClickActiveSort(sort);
                   setIsOptionsOpen(false);
                 }}
