@@ -39,7 +39,9 @@ const SortingPlaces = ({currentCity, hotels, onClickHotel, activeSort, onClickAc
           }}
           className="places__sorting-type" tabIndex="0">
           {activeSort}
-          <svg className="places__sorting-arrow" width="7" height="4">
+          <svg
+            className="places__sorting-arrow"
+            style={{transform: isOptionsOpen ? `rotate(180deg)` : `rotate(0deg)`}} width="7" height="4">
             <use xlinkHref="#icon-arrow-select" />
           </svg>
         </span>
