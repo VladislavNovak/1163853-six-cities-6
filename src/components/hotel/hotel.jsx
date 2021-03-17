@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {RATING_MULTIPLIER} from '../../utils/constants';
-import {ActionCreator} from '../../store/action';
+import {highlightHotelID, refreshHotelDataLoadStatus} from '../../store/action';
 import {hotelStructure} from '../../utils/types';
 import {fetchActiveHotel, fetchComments, fetchNearbyHotels} from '../../store/api-action';
 
@@ -93,14 +93,14 @@ Hotel.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
-    dispatch(ActionCreator.refreshHotelDataLoadStatus(false));
+    dispatch(refreshHotelDataLoadStatus(false));
     dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));
   },
 
   onMouseOverHotel(id) {
-    dispatch(ActionCreator.highlightHotelID(id));
+    dispatch(highlightHotelID(id));
   },
 });
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {AuthorizationStatus, FIVE_STARS, LoadingStatus, RATING_MULTIPLIER, ReviewLength} from '../../utils/constants';
 import {reviewStructure} from '../../utils/types';
-import {ActionCreator} from '../../store/action';
+import {setLastCommentLoadingStatus} from '../../store/action';
 import {Textarea} from './review-stile';
 
 const Review = ({
@@ -144,7 +144,7 @@ const mapStateToProps = ({lastCommentLoadingStatus, authorizationStatus}) => ({l
 
 const mapDispatchToProps = (dispatch) => ({
   changeLastCommentLoadingStatus(status) {
-    dispatch(ActionCreator.setLastCommentLoadingStatus(status));
+    dispatch(setLastCommentLoadingStatus(status));
   }
 });
 

@@ -5,7 +5,7 @@ import {hotelStructure, reviewStructure} from '../../utils/types';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
 import {getPlace, isHotelIDFound} from '../../utils';
 import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
-import {ActionCreator} from '../../store/action';
+import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../store/action';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
@@ -180,23 +180,23 @@ ScreenRoom.propTypes = {
 const mapStateToProps = ({activeHotel, comments, nearbyHotels, activeHotelReloaded}) => ({activeHotel, comments, nearbyHotels, activeHotelReloaded});
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
-    dispatch(ActionCreator.refreshHotelDataLoadStatus(false));
+    dispatch(refreshHotelDataLoadStatus(false));
     dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));
   },
 
   changeLastCommentLoadingStatus(status) {
-    dispatch(ActionCreator.setLastCommentLoadingStatus(status));
+    dispatch(setLastCommentLoadingStatus(status));
   },
 
   sendFavoriteToServer(favoriteStatus) {
-    dispatch(ActionCreator.refreshHotelDataLoadStatus(false));
+    dispatch(refreshHotelDataLoadStatus(false));
     dispatch(sendUpdatedFavoriteState(favoriteStatus));
   },
 
   sendCommentToServer(comment) {
-    dispatch(ActionCreator.setLastCommentLoadingStatus(LoadingStatus.SENT));
+    dispatch(setLastCommentLoadingStatus(LoadingStatus.SENT));
     return dispatch(sendUpdatedComment(comment));
   },
 });

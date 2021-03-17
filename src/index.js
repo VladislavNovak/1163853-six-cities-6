@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {reducer} from './store/reducers/reducer';
-import {ActionCreator} from './store/action';
+import {requireAuthorization} from './store/action';
 import {AuthorizationStatus} from './utils/constants';
 import {checkAuth, fetchHotels} from './store/api-action';
 import {createAPI} from './services/api';
@@ -13,7 +13,7 @@ import {redirect} from './store/middlewares/redirect';
 
 import App from './components/app/app';
 
-const api = createAPI(() => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)));
+const api = createAPI(() => store.dispatch(requireAuthorization(AuthorizationStatus.NO_AUTH)));
 
 const store = createStore(
     reducer,

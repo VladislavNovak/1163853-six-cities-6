@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {KeyCode, RenderType, SortType} from '../../utils/constants';
 import {cityStructure, hotelStructure} from '../../utils/types';
-import {ActionCreator} from '../../store/action';
+import {setActiveSort} from '../../store/action';
 import {getSortedHotels} from '../../utils';
 
 import {HotelsList} from '..';
@@ -92,7 +92,7 @@ const mapStateToProps = ({activeSort}) => ({activeSort});
 
 const mapDispatchToProps = (dispatch) => ({
   onClickActiveSort(sort) {
-    dispatch(ActionCreator.setActiveSort(sort));
+    dispatch(setActiveSort(sort));
   }
 });
 
