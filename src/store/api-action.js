@@ -1,58 +1,68 @@
 import {adaptAllCommentsToClient} from '../services/commentAdapter';
 import {adaptAllHotelsToClient, adaptOneHotelToClient} from '../services/hotelAdapter';
 import {AuthorizationStatus, JumpTo, LoadingStatus, ServerRequest} from '../utils/constants';
-import {ActionCreator} from './action';
+import {
+  loadComments,
+  loadHotels,
+  loadNearestHotels,
+  loadUserEmail,
+  redirectToRoute,
+  refreshHotelData,
+  refreshHotelDataLoadStatus,
+  requireAuthorization,
+  setLastCommentLoadingStatus,
+} from './action';
 
 export const fetchHotels = () => (dispatch, _getState, api) => (
   api.get(ServerRequest.HOTELS).then(({data}) => {
     const hotels = adaptAllHotelsToClient(data);
-    dispatch(ActionCreator.loadHotels(hotels));
+    dispatch(loadHotels(hotels));
   })
 );
 
 export const fetchActiveHotel = (id) => (dispatch, _getState, api) => (
   api.get(`${ServerRequest.HOTELS}/${id}`).then(({data}) => {
     const hotel = adaptOneHotelToClient(data);
-    dispatch(ActionCreator.refreshHotelData(hotel));
-    dispatch(ActionCreator.refreshHotelDataLoadStatus(true));
+    dispatch(refreshHotelData(hotel));
+    dispatch(refreshHotelDataLoadStatus(true));
   })
 );
 
 export const fetchNearbyHotels = (id) => (dispatch, _getState, api) => (
   api.get(`${ServerRequest.HOTELS}/${id}${ServerRequest.NEARBY}`).then(({data}) => {
     const nearbyHotels = adaptAllHotelsToClient(data);
-    dispatch(ActionCreator.loadNearestHotels(nearbyHotels));
+    dispatch(loadNearestHotels(nearbyHotels));
   })
 );
 
 export const fetchComments = (id) => (dispatch, _getState, api) => (
   api.get(`${ServerRequest.COMMENTS}/${id}`).then(({data}) => {
     const comments = adaptAllCommentsToClient(data);
-    dispatch(ActionCreator.loadComments(comments));
+    dispatch(loadComments(comments));
   })
 );
 
 export const sendUpdatedComment = ({id, comment, rating}) => (dispatch, _getState, api) => (
   api.post(`${ServerRequest.COMMENTS}/${id}`, {comment, rating}).then(({data}) => {
     const comments = adaptAllCommentsToClient(data);
-    dispatch(ActionCreator.loadComments(comments));
-    dispatch(ActionCreator.setLastCommentLoadingStatus(LoadingStatus.RECEIVED));
+    dispatch(loadComments(comments));
+    dispatch(setLastCommentLoadingStatus(LoadingStatus.RECEIVED));
   })
 );
 
 export const sendUpdatedFavoriteState = ({id, newFavoriteStatus: status}) => (dispatch, _getState, api) => (
   api.post(`${ServerRequest.FAVORITE}/${id}/${status}`).then(({data}) => {
     const hotel = adaptOneHotelToClient(data);
-    dispatch(ActionCreator.refreshHotelData(hotel));
-    dispatch(ActionCreator.refreshHotelDataLoadStatus(true));
+    dispatch(refreshHotelData(hotel));
+    dispatch(refreshHotelDataLoadStatus(true));
   })
 );
 
 export const checkAuth = () => (dispatch, _getState, api) => (
   api.get(ServerRequest.LOGIN)
     .then(({data}) => {
-      dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH));
-      dispatch(ActionCreator.loadUserEmail(data[`email`]));
+      dispatch(requireAuthorization(AuthorizationStatus.AUTH));
+      dispatch(loadUserEmail(data[`email`]));
     })
     .catch(() => {})
 );
@@ -60,9 +70,9 @@ export const checkAuth = () => (dispatch, _getState, api) => (
 export const login = ({login: email, password}) => (dispatch, _getState, api) => (
   api.post(ServerRequest.LOGIN, {email, password})
     .then(({data}) => {
-      dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.AUTH));
-      dispatch(ActionCreator.loadUserEmail(data[`email`]));
-      dispatch(ActionCreator.redirectToRoute(JumpTo.ROOT));
+      dispatch(requireAuthorization(AuthorizationStatus.AUTH));
+      dispatch(loadUserEmail(data[`email`]));
+      dispatch(redirectToRoute(JumpTo.ROOT));
     })
 );
 
