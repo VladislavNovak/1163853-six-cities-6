@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {RenderType, SortType} from '../../utils/constants';
+import {KeyCode, RenderType, SortType} from '../../utils/constants';
 import {cityStructure, hotelStructure} from '../../utils/types';
 import {ActionCreator} from '../../store/action';
 import {getSortedHotels} from '../../utils';
@@ -15,14 +15,22 @@ const SortingPlaces = ({currentCity, hotels, onClickHotel, activeSort, onClickAc
 
   useEffect(() => {
     document.body.addEventListener(`click`, handleOutsideClick);
+    document.body.addEventListener(`keydown`, handleOutsideEsc);
 
     return () => {
       document.body.removeEventListener(`click`, handleOutsideClick);
+      document.body.removeEventListener(`keydown`, handleOutsideEsc);
     };
   }, []);
 
-  const handleOutsideClick = (evt) => {
-    if (!evt.path.includes(sortRef.current)) {
+  const handleOutsideClick = ({path}) => {
+    if (!path.includes(sortRef.current)) {
+      setIsOptionsOpen(false);
+    }
+  };
+
+  const handleOutsideEsc = (evt) => {
+    if (evt.keyCode === KeyCode.ESC) {
       setIsOptionsOpen(false);
     }
   };
