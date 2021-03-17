@@ -49,3 +49,9 @@ export const getSortedHotels = (hotels, sortType) => {
 export const isHotelIDFound = (hotels, id) => {
   return hotels.findIndex((item) => item.id === id) >= 0;
 };
+
+// Получает массив отелей и отель с новыми данными
+// Возвращает массив, в котором один из отелей обновлён
+export const updatedHotelsList = (hotels, update) => {
+  return hotels.map((hotel) => hotel.id === update.id ? update : hotel);
+};

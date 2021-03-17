@@ -13,8 +13,8 @@ export const fetchHotels = () => (dispatch, _getState, api) => (
 export const fetchActiveHotel = (id) => (dispatch, _getState, api) => (
   api.get(`${ServerRequest.HOTELS}/${id}`).then(({data}) => {
     const hotel = adaptOneHotelToClient(data);
-    dispatch(ActionCreator.loadActiveHotel(hotel));
-    dispatch(ActionCreator.reloadActiveHotel(true));
+    dispatch(ActionCreator.refreshHotelData(hotel));
+    dispatch(ActionCreator.refreshHotelDataLoadStatus(true));
   })
 );
 
@@ -37,6 +37,14 @@ export const sendUpdatedComment = ({id, comment, rating}) => (dispatch, _getStat
     const comments = adaptAllCommentsToClient(data);
     dispatch(ActionCreator.loadComments(comments));
     dispatch(ActionCreator.setLastCommentLoadingStatus(LoadingStatus.RECEIVED));
+  })
+);
+
+export const sendUpdatedFavoriteState = ({id, newFavoriteStatus: status}) => (dispatch, _getState, api) => (
+  api.post(`${ServerRequest.FAVORITE}/${id}/${status}`).then(({data}) => {
+    const hotel = adaptOneHotelToClient(data);
+    dispatch(ActionCreator.refreshHotelData(hotel));
+    dispatch(ActionCreator.refreshHotelDataLoadStatus(true));
   })
 );
 

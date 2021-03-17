@@ -1,4 +1,4 @@
-import {getPlace} from '../../utils';
+import {getPlace, updatedHotelsList} from '../../utils';
 import {ActionType} from '../action';
 import {CitiesList, SortType, AuthorizationStatus, LoadingStatus} from '../../utils/constants';
 
@@ -35,9 +35,13 @@ const reducer = (state = initialState, action) => {
       return {...state, comments: action.payload};
     case ActionType.SET_LAST_COMMENT_LOADING_STATUS:
       return {...state, lastCommentLoadingStatus: action.payload};
-    case ActionType.LOAD_ACTIVE_HOTEL:
-      return {...state, activeHotel: action.payload};
-    case ActionType.RELOAD_ACTIVE_HOTEL:
+    case ActionType.REFRESH_HOTEL_DATA:
+      return {
+        ...state,
+        activeHotel: action.payload,
+        hotels: updatedHotelsList(state.hotels, action.payload),
+      };
+    case ActionType.REFRESH_HOTEL_DATA_LOAD_STATUS:
       return {...state, activeHotelReloaded: action.payload};
     case ActionType.LOAD_USER_EMAIL:
       return {...state, userEmail: action.payload};

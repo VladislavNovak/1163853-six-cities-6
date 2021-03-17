@@ -93,7 +93,7 @@ Hotel.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
-    dispatch(ActionCreator.reloadActiveHotel(false));
+    dispatch(ActionCreator.refreshHotelDataLoadStatus(false));
     dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));

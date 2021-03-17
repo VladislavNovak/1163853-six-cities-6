@@ -33,6 +33,7 @@ export const ServerRequest = {
   LOGIN: `/login`,
   COMMENTS: `/comments`,
   NEARBY: `/nearby`,
+  FAVORITE: `/favorite`,
 };
 
 export const ReviewLength = {
