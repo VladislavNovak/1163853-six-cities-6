@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import leaflet from 'leaflet';
 import {cityStructure, hotelStructure} from '../../utils/types';
 import {MarkerType, NOT_INITIALIZED} from '../../utils/constants';
+import {getHighlightHotelID} from '../../store/user-reducer/selectors';
 
 import "leaflet/dist/leaflet.css";
 
@@ -87,8 +88,8 @@ Map.propTypes = {
   highlightHotelID: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = ({USER}) => ({
-  highlightHotelID: USER.highlightHotelID
+const mapStateToProps = (state) => ({
+  highlightHotelID: getHighlightHotelID(state),
 });
 
 export {Map};

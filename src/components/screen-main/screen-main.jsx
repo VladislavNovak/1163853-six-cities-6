@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {cityStructure, hotelStructure} from '../../utils/types';
 import {CitiesList, RenderType} from '../../utils/constants';
 import {getFilteredHotels, getPlace} from '../../utils';
+import {getActiveCity} from '../../store/user-reducer/selectors';
 
 import {Places, NoPlaces, Header} from '..';
 
@@ -50,8 +51,8 @@ ScreenMain.propTypes = {
   onClickTabLocation: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({USER}) => ({
-  activeCity: USER.activeCity
+const mapStateToProps = (state) => ({
+  activeCity: getActiveCity(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

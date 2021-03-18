@@ -6,6 +6,7 @@ import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from
 import {getPlace, isHotelIDFound} from '../../utils';
 import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
 import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../store/action';
+import {getActiveHotel, getActiveHotelReloaded, getComments, getNearbyHotels} from '../../store/user-reducer/selectors';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
@@ -177,11 +178,11 @@ ScreenRoom.propTypes = {
   sendFavoriteToServer: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({USER}) => ({
-  activeHotel: USER.activeHotel,
-  comments: USER.comments,
-  nearbyHotels: USER.nearbyHotels,
-  activeHotelReloaded: USER.activeHotelReloaded
+const mapStateToProps = (state) => ({
+  activeHotel: getActiveHotel(state),
+  comments: getComments(state),
+  nearbyHotels: getNearbyHotels(state),
+  activeHotelReloaded: getActiveHotelReloaded(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

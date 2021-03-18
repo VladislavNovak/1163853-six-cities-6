@@ -5,6 +5,7 @@ import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
 import {hotelStructure} from '../../utils/types';
 import {JumpTo, WarningType} from '../../utils/constants';
 import browserHistory from '../../browser-history';
+import {getHotels, getIsHotelsLoaded} from '../../store/user-reducer/selectors';
 
 import {ScreenMain, ScreenLogin, ScreenFavorites, ScreenRoom, ScreenWarning, ScreenLoading, PrivateRoute} from '..';
 
@@ -68,9 +69,9 @@ App.propTypes = {
   isHotelsLoaded: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({USER}) => ({
-  hotels: USER.hotels,
-  isHotelsLoaded: USER.isHotelsLoaded,
+const mapStateToProps = (state) => ({
+  hotels: getHotels(state),
+  isHotelsLoaded: getIsHotelsLoaded(state),
 });
 
 export {App};

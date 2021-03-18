@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {AuthorizationStatus, JumpTo} from '../../utils/constants';
+import {getAuthorizationStatus} from '../../store/auth-reducer/selectors';
+import {getUserEmail} from '../../store/user-reducer/selectors';
 
 import {Logo} from '..';
 
@@ -40,9 +42,9 @@ Header.propTypes = {
   userEmail: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = ({AUTH, USER}) => ({
-  authorizationStatus: AUTH.authorizationStatus,
-  userEmail: USER.userEmail,
+const mapStateToProps = (state) => ({
+  authorizationStatus: getAuthorizationStatus(state),
+  userEmail: getUserEmail(state),
 });
 
 export {Header};

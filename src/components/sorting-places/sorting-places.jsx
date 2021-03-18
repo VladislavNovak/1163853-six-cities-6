@@ -5,6 +5,7 @@ import {KeyCode, RenderType, SortType} from '../../utils/constants';
 import {cityStructure, hotelStructure} from '../../utils/types';
 import {setActiveSort} from '../../store/action';
 import {getSortedHotels} from '../../utils';
+import {getActiveSort} from '../../store/user-reducer/selectors';
 
 import {HotelsList} from '..';
 
@@ -88,8 +89,8 @@ SortingPlaces.propTypes = {
   onClickActiveSort: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({USER}) => ({
-  activeSort: USER.activeSort
+const mapStateToProps = (state) => ({
+  activeSort: getActiveSort(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

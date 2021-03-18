@@ -6,6 +6,8 @@ import {AuthorizationStatus, FIVE_STARS, LoadingStatus, RATING_MULTIPLIER, Revie
 import {reviewStructure} from '../../utils/types';
 import {setLastCommentLoadingStatus} from '../../store/action';
 import {Textarea} from './review-stile';
+import {getAuthorizationStatus} from '../../store/auth-reducer/selectors';
+import {getLastCommentLoadingStatus} from '../../store/user-reducer/selectors';
 
 const Review = ({
   comments,
@@ -140,9 +142,9 @@ Review.propTypes = ({
   authorizationStatus: PropTypes.string.isRequired,
 });
 
-const mapStateToProps = ({AUTH, USER}) => ({
-  authorizationStatus: AUTH.authorizationStatus,
-  lastCommentLoadingStatus: USER.lastCommentLoadingStatus,
+const mapStateToProps = (state) => ({
+  authorizationStatus: getAuthorizationStatus(state),
+  lastCommentLoadingStatus: getLastCommentLoadingStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

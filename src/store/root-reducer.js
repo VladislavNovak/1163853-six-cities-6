@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
-import {authReducer} from './reducers/auth-reducer';
-import {userReducer} from './reducers/user-reducer';
+import {authReducer} from './auth-reducer/auth-reducer';
+import {userReducer} from './user-reducer/user-reducer';
 
 export const NameSpace = {
   AUTH: `AUTH`,
