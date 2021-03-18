@@ -78,7 +78,8 @@ const ScreenRoom = ({
                 </h1>
                 <button
                   onClick={handleChangeFavoriteStatus}
-                  className={`property__bookmark-button ${isFavorite ? `property__bookmark-button--active` : ``} button`} type="button">
+                  className={`property__bookmark-button ${isFavorite ? `property__bookmark-button--active` : ``} button`}
+                  type="button">
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"/>
                   </svg>
