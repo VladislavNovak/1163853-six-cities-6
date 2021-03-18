@@ -1,6 +1,6 @@
 import {getPlace, updatedHotelsList} from '../../utils';
 import {ActionType} from '../action';
-import {CitiesList, SortType, AuthorizationStatus, LoadingStatus} from '../../utils/constants';
+import {CitiesList, SortType, LoadingStatus} from '../../utils/constants';
 
 const initialState = {
   isHotelsLoaded: false,
@@ -13,11 +13,10 @@ const initialState = {
   lastCommentLoadingStatus: LoadingStatus.DEFAULT,
   highlightHotelID: ``,
   activeSort: SortType.POPULAR,
-  authorizationStatus: AuthorizationStatus.NO_AUTH,
   userEmail: ``,
 };
 
-const reducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case ActionType.LOAD_HOTELS:
       return {...state, isHotelsLoaded: true, hotels: action.payload, activeCity: getPlace(action.payload, CitiesList[0])};
@@ -29,8 +28,6 @@ const reducer = (state = initialState, action) => {
       return {...state, highlightHotelID: action.payload};
     case ActionType.SET_ACTIVE_SORT:
       return {...state, activeSort: action.payload};
-    case ActionType.REQUIRED_AUTHORIZATION:
-      return {...state, authorizationStatus: action.payload};
     case ActionType.LOAD_COMMENTS:
       return {...state, comments: action.payload};
     case ActionType.SET_LAST_COMMENT_LOADING_STATUS:
@@ -50,16 +47,4 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export {reducer};
-
-// isHotelsLoaded: false - если отели не загружены. Используется в App
-// hotels: список отелей. Используется в App
-// nearbyHotels: список ближайших отелей. Используется в ScreenRoom
-// activeHotel: активный выделенный отель. Используется в ScreenRoom
-// activeHotelReloaded: false - если отправлен запрос на сервер, true - когда ответ получен. Используется в ScreenRoom
-// activeCity: null,
-// comments: список комментариев. Используется в Review через ScreenRoom
-// highlightHotelID: ``,
-// activeSort: SortType.POPULAR,
-// authorizationStatus: AuthorizationStatus.NO_AUTH,
-// userEmail: ``,
+export {userReducer};

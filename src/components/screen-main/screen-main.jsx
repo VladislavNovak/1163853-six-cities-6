@@ -50,7 +50,9 @@ ScreenMain.propTypes = {
   onClickTabLocation: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({activeCity}) => ({activeCity});
+const mapStateToProps = ({USER}) => ({
+  activeCity: USER.activeCity
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onClickTabLocation(newSelectedCity) {

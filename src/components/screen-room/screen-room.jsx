@@ -177,7 +177,13 @@ ScreenRoom.propTypes = {
   sendFavoriteToServer: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({activeHotel, comments, nearbyHotels, activeHotelReloaded}) => ({activeHotel, comments, nearbyHotels, activeHotelReloaded});
+const mapStateToProps = ({USER}) => ({
+  activeHotel: USER.activeHotel,
+  comments: USER.comments,
+  nearbyHotels: USER.nearbyHotels,
+  activeHotelReloaded: USER.activeHotelReloaded
+});
+
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
     dispatch(refreshHotelDataLoadStatus(false));

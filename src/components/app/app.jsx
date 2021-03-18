@@ -68,7 +68,10 @@ App.propTypes = {
   isHotelsLoaded: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({hotels, isHotelsLoaded}) => ({hotels, isHotelsLoaded});
+const mapStateToProps = ({USER}) => ({
+  hotels: USER.hotels,
+  isHotelsLoaded: USER.isHotelsLoaded,
+});
 
 export {App};
 export default connect(mapStateToProps, null)(App);

@@ -40,7 +40,10 @@ Header.propTypes = {
   userEmail: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = ({authorizationStatus, userEmail}) => ({authorizationStatus, userEmail});
+const mapStateToProps = ({AUTH, USER}) => ({
+  authorizationStatus: AUTH.authorizationStatus,
+  userEmail: USER.userEmail,
+});
 
 export {Header};
 export default connect(mapStateToProps, null)(Header);

@@ -88,7 +88,9 @@ SortingPlaces.propTypes = {
   onClickActiveSort: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({activeSort}) => ({activeSort});
+const mapStateToProps = ({USER}) => ({
+  activeSort: USER.activeSort
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onClickActiveSort(sort) {

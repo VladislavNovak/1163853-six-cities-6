@@ -140,7 +140,10 @@ Review.propTypes = ({
   authorizationStatus: PropTypes.string.isRequired,
 });
 
-const mapStateToProps = ({lastCommentLoadingStatus, authorizationStatus}) => ({lastCommentLoadingStatus, authorizationStatus});
+const mapStateToProps = ({AUTH, USER}) => ({
+  authorizationStatus: AUTH.authorizationStatus,
+  lastCommentLoadingStatus: USER.lastCommentLoadingStatus,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   changeLastCommentLoadingStatus(status) {

@@ -4,7 +4,7 @@ import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {reducer} from './store/reducers/reducer';
+import rootReducer from './store/root-reducer';
 import {requireAuthorization} from './store/action';
 import {AuthorizationStatus} from './utils/constants';
 import {checkAuth, fetchHotels} from './store/api-action';
@@ -16,7 +16,7 @@ import App from './components/app/app';
 const api = createAPI(() => store.dispatch(requireAuthorization(AuthorizationStatus.NO_AUTH)));
 
 const store = createStore(
-    reducer,
+    rootReducer,
     composeWithDevTools(
         applyMiddleware(thunk.withExtraArgument(api)),
         applyMiddleware(redirect))

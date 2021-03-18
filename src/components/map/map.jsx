@@ -87,7 +87,9 @@ Map.propTypes = {
   highlightHotelID: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = ({highlightHotelID}) => ({highlightHotelID});
+const mapStateToProps = ({USER}) => ({
+  highlightHotelID: USER.highlightHotelID
+});
 
 export {Map};
 export default connect(mapStateToProps, null)(Map);
