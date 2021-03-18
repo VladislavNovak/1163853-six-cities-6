@@ -49,7 +49,7 @@ const ScreenRoom = ({
   };
 
   const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
-  const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
+  const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
   const currentCity = getPlace(hotels, cityName);
   const threeNearestHotels = nearbyHotels.slice(0, 3);
 

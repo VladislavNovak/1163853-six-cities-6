@@ -40,7 +40,7 @@ export const getSortedHotels = (hotels, sortType) => {
     [SortType.POPULAR]: () => hotels,
     [SortType.PRICE_HIGH_TO_LOW]: () => copyHotels.sort((a, b) => b.price - a.price),
     [SortType.PRICE_LOW_TO_HIGH]: () => copyHotels.sort((a, b) => a.price - b.price),
-    [SortType.TOP_RATED_FIRST]: () => copyHotels.sort((a, b) => b.rating - a.rating),
+    [SortType.TOP_RATED_FIRST]: () => copyHotels.sort((a, b) => Number(b.rating) - Number(a.rating)),
   }[sortType]());
 };
 

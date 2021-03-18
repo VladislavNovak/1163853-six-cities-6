@@ -15,7 +15,7 @@ const Hotel = ({
   onMouseOverHotel,
   getIDToServerRequest}) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
-  const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
+  const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
 
   return (
     <article
