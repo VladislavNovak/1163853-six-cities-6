@@ -1,7 +1,11 @@
 export const RATING_MULTIPLIER = 20;
 export const NOT_INITIALIZED = -1;
-export const FIVE_STARS = [`1`, `2`, `3`, `4`, `5`];
+export const FIVE_STARS = [`5`, `4`, `3`, `2`, `1`];
 export const REGULAR_EMAIL_TEMPLATE = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+export const KeyCode = {
+  ESC: `ESC`,
+};
 
 export const MapType = {
   MAIN_MAP: `cities__map`,
@@ -33,6 +37,7 @@ export const ServerRequest = {
   LOGIN: `/login`,
   COMMENTS: `/comments`,
   NEARBY: `/nearby`,
+  FAVORITE: `/favorite`,
 };
 
 export const ReviewLength = {

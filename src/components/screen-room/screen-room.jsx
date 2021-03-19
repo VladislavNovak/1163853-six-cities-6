@@ -4,8 +4,9 @@ import {connect} from 'react-redux';
 import {hotelStructure, reviewStructure} from '../../utils/types';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
 import {getPlace, isHotelIDFound} from '../../utils';
-import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment} from '../../store/api-action';
-import {ActionCreator} from '../../store/action';
+import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
+import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../store/action';
+import {getActiveHotel, getActiveHotelReloaded, getComments, getNearbyHotels} from '../../store/user-reducer/selectors';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
@@ -20,6 +21,7 @@ const ScreenRoom = ({
   activeHotelReloaded,
   sendCommentToServer,
   changeLastCommentLoadingStatus,
+  sendFavoriteToServer,
 }) => {
 
   if (!isHotelIDFound(hotels, id)) {
@@ -42,8 +44,12 @@ const ScreenRoom = ({
     });
   };
 
+  const handleChangeFavoriteStatus = () => {
+    sendFavoriteToServer({id, newFavoriteStatus: Number(!isFavorite)});
+  };
+
   const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
-  const styleRating = {width: `${rating * RATING_MULTIPLIER}%`};
+  const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
   const currentCity = getPlace(hotels, cityName);
   const threeNearestHotels = nearbyHotels.slice(0, 3);
 
@@ -65,18 +71,15 @@ const ScreenRoom = ({
           </div>
           <div className="property__container container">
             <div className="property__wrapper">
-              {
-                isPremium && (
-                  <div className="property__mark">
-                    <span>Premium</span>
-                  </div>
-                )
-              }
+              {isPremium && (<div className="property__mark"><span>Premium</span></div>)}
               <div className="property__name-wrapper">
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className={`property__bookmark-button ${isFavorite && `property__bookmark-button--active`} button`} type="button">
+                <button
+                  onClick={handleChangeFavoriteStatus}
+                  className={`property__bookmark-button ${isFavorite ? `property__bookmark-button--active` : ``} button`}
+                  type="button">
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"/>
                   </svg>
@@ -91,15 +94,9 @@ const ScreenRoom = ({
                 <span className="property__rating-value rating__value">{rating}</span>
               </div>
               <ul className="property__features">
-                <li className="property__feature property__feature--entire">
-                  {type}
-                </li>
-                <li className="property__feature property__feature--bedrooms">
-                  {bedrooms} Bedrooms
-                </li>
-                <li className="property__feature property__feature--adults">
-                  Max {adults} adults
-                </li>
+                <li className="property__feature property__feature--entire">{type}</li>
+                <li className="property__feature property__feature--bedrooms">{bedrooms} Bedrooms</li>
+                <li className="property__feature property__feature--adults">Max {adults} adults</li>
               </ul>
               <div className="property__price">
                 <b className="property__price-value">&euro;{price}</b>
@@ -179,23 +176,35 @@ ScreenRoom.propTypes = {
   getIDToServerRequest: PropTypes.func.isRequired,
   sendCommentToServer: PropTypes.func.isRequired,
   changeLastCommentLoadingStatus: PropTypes.func.isRequired,
+  sendFavoriteToServer: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({activeHotel, comments, nearbyHotels, activeHotelReloaded}) => ({activeHotel, comments, nearbyHotels, activeHotelReloaded});
+const mapStateToProps = (state) => ({
+  activeHotel: getActiveHotel(state),
+  comments: getComments(state),
+  nearbyHotels: getNearbyHotels(state),
+  activeHotelReloaded: getActiveHotelReloaded(state),
+});
+
 const mapDispatchToProps = (dispatch) => ({
   getIDToServerRequest(id) {
-    dispatch(ActionCreator.reloadActiveHotel(false));
+    dispatch(refreshHotelDataLoadStatus(false));
     dispatch(fetchActiveHotel(id));
     dispatch(fetchComments(id));
     dispatch(fetchNearbyHotels(id));
   },
 
   changeLastCommentLoadingStatus(status) {
-    dispatch(ActionCreator.setLastCommentLoadingStatus(status));
+    dispatch(setLastCommentLoadingStatus(status));
+  },
+
+  sendFavoriteToServer(favoriteStatus) {
+    dispatch(refreshHotelDataLoadStatus(false));
+    dispatch(sendUpdatedFavoriteState(favoriteStatus));
   },
 
   sendCommentToServer(comment) {
-    dispatch(ActionCreator.setLastCommentLoadingStatus(LoadingStatus.SENT));
+    dispatch(setLastCommentLoadingStatus(LoadingStatus.SENT));
     return dispatch(sendUpdatedComment(comment));
   },
 });

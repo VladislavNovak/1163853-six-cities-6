@@ -12,7 +12,7 @@ export const adaptOneHotelToClient = (hotel) => ({
   bedrooms: hotel.bedrooms,
   adults: hotel.max_adults,
   price: hotel.price,
-  rating: hotel.rating,
+  rating: String(hotel.rating),
   description: hotel.description,
   type: hotel.type,
   hostName: hotel.host.name,

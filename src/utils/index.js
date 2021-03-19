@@ -40,7 +40,7 @@ export const getSortedHotels = (hotels, sortType) => {
     [SortType.POPULAR]: () => hotels,
     [SortType.PRICE_HIGH_TO_LOW]: () => copyHotels.sort((a, b) => b.price - a.price),
     [SortType.PRICE_LOW_TO_HIGH]: () => copyHotels.sort((a, b) => a.price - b.price),
-    [SortType.TOP_RATED_FIRST]: () => copyHotels.sort((a, b) => b.rating - a.rating),
+    [SortType.TOP_RATED_FIRST]: () => copyHotels.sort((a, b) => Number(b.rating) - Number(a.rating)),
   }[sortType]());
 };
 
@@ -48,4 +48,10 @@ export const getSortedHotels = (hotels, sortType) => {
 // Возвращает true, если запрашиваемый отель существует, и false - если отель существует
 export const isHotelIDFound = (hotels, id) => {
   return hotels.findIndex((item) => item.id === id) >= 0;
+};
+
+// Получает массив отелей и отель с новыми данными
+// Возвращает массив, в котором один из отелей обновлён
+export const updatedHotelsList = (hotels, update) => {
+  return hotels.map((hotel) => hotel.id === update.id ? update : hotel);
 };

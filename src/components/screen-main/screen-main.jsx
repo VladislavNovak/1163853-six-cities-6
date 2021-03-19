@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ActionCreator} from '../../store/action';
+import {setActiveCity} from '../../store/action';
 import {connect} from 'react-redux';
 import {cityStructure, hotelStructure} from '../../utils/types';
 import {CitiesList, RenderType} from '../../utils/constants';
 import {getFilteredHotels, getPlace} from '../../utils';
+import {getActiveCity} from '../../store/user-reducer/selectors';
 
 import {Places, NoPlaces, Header} from '..';
 
@@ -50,11 +51,13 @@ ScreenMain.propTypes = {
   onClickTabLocation: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({activeCity}) => ({activeCity});
+const mapStateToProps = (state) => ({
+  activeCity: getActiveCity(state),
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onClickTabLocation(newSelectedCity) {
-    dispatch(ActionCreator.setActiveCity(newSelectedCity));
+    dispatch(setActiveCity(newSelectedCity));
   }
 });
 
