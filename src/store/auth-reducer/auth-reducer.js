@@ -1,17 +1,16 @@
-import {ActionType} from '../action';
+import {createReducer} from '@reduxjs/toolkit';
 import {AuthorizationStatus} from '../../utils/constants';
+import {requireAuthorization} from '../action';
 
 const initialState = {
   authorizationStatus: AuthorizationStatus.NO_AUTH,
 };
 
-const authReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.REQUIRED_AUTHORIZATION:
-      return {...state, authorizationStatus: action.payload};
-    default:
-      return state;
-  }
-};
+const authReducer = createReducer(initialState, (builder) => {
+  builder.addCase(requireAuthorization, (store, action) => {
+    store.authorizationStatus = action.payload;
+  });
+});
+
 
 export {authReducer};
