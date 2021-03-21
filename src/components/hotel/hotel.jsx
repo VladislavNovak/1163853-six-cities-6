@@ -5,7 +5,7 @@ import {RATING_MULTIPLIER} from '../../utils/constants';
 import {highlightHotelID, refreshHotelDataLoadStatus} from '../../store/action';
 import {hotelStructure} from '../../utils/types';
 import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedFavoriteState} from '../../store/api-action';
-import {getActiveHotelReloaded} from '../../store/user-reducer/selectors';
+import {getActiveHotel, getActiveHotelReloaded} from '../../store/user-reducer/selectors';
 import HotelPicture from '../hotel-picture/hotel-picture';
 
 const Hotel = ({
@@ -18,12 +18,13 @@ const Hotel = ({
   getIDToServerRequest,
   sendFavoriteToServer,
   activeHotelReloaded,
+  activeHotel,
 }) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
   const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
 
   useEffect(() => {
-    if (!activeHotelReloaded) {
+    if (!activeHotelReloaded && activeHotel.id === id) {
       getIDToServerRequest(id);
     }
   }, [activeHotelReloaded]);
@@ -93,10 +94,12 @@ Hotel.propTypes = {
   getIDToServerRequest: PropTypes.func.isRequired,
   sendFavoriteToServer: PropTypes.func.isRequired,
   activeHotelReloaded: PropTypes.bool.isRequired,
+  activeHotel: PropTypes.shape(hotelStructure).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   activeHotelReloaded: getActiveHotelReloaded(state),
+  activeHotel: getActiveHotel(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
