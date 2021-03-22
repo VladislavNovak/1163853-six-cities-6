@@ -1,31 +1,30 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {AuthorizationStatus, LoadingStatus} from '../../utils/constants';
 import {reviewStructure} from '../../utils/types';
 import {setLastCommentLoadingStatus} from '../../store/action';
-import {getAuthorizationStatus} from '../../store/auth-reducer/selectors';
-import {getLastCommentLoadingStatus} from '../../store/user-reducer/selectors';
 import ReviewForm from '../review-form/review-form';
 import ReviewsList from '../reviews-list/reviews-list';
 
 const Review = ({
   comments,
   onSubmitSendComment,
-  lastCommentLoadingStatus,
-  changeLastCommentLoadingStatus,
-  authorizationStatus,
 }) => {
-  const [selectedStars, setSelectedStars] = React.useState(`0`);
-  const [tale, setTale] = React.useState(``);
+  const [selectedStars, setSelectedStars] = useState(`0`);
+  const [tale, setTale] = useState(``);
+
+  const {authorizationStatus} = useSelector((state) => state.AUTH);
+  const {lastCommentLoadingStatus} = useSelector((state) => state.USER);
+  const dispatch = useDispatch();
 
   const handleChangeRadio = ({target}) => {
-    changeLastCommentLoadingStatus(LoadingStatus.DEFAULT);
+    dispatch(setLastCommentLoadingStatus(LoadingStatus.DEFAULT));
     setSelectedStars(target.value);
   };
 
   const handleChangeTextarea = ({target}) => {
-    changeLastCommentLoadingStatus(LoadingStatus.DEFAULT);
+    dispatch(setLastCommentLoadingStatus(LoadingStatus.DEFAULT));
     setTale(target.value);
   };
 
@@ -41,7 +40,7 @@ const Review = ({
     if (lastCommentLoadingStatus === LoadingStatus.RECEIVED) {
       setTale(``);
       setSelectedStars(`0`);
-      changeLastCommentLoadingStatus(LoadingStatus.DEFAULT);
+      dispatch(setLastCommentLoadingStatus(LoadingStatus.DEFAULT));
     }
 
     if (lastCommentLoadingStatus === LoadingStatus.ERROR) {
@@ -69,21 +68,6 @@ const Review = ({
 Review.propTypes = ({
   comments: PropTypes.arrayOf(reviewStructure).isRequired,
   onSubmitSendComment: PropTypes.func.isRequired,
-  changeLastCommentLoadingStatus: PropTypes.func.isRequired,
-  lastCommentLoadingStatus: PropTypes.string.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
 });
 
-const mapStateToProps = (state) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-  lastCommentLoadingStatus: getLastCommentLoadingStatus(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  changeLastCommentLoadingStatus(status) {
-    dispatch(setLastCommentLoadingStatus(status));
-  }
-});
-
-export {Review};
-export default connect(mapStateToProps, mapDispatchToProps)(Review);
+export default Review;

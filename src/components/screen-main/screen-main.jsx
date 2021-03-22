@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {setActiveCity} from '../../store/action';
-import {connect} from 'react-redux';
-import {cityStructure, hotelStructure} from '../../utils/types';
+import {useSelector, useDispatch} from 'react-redux';
+import {hotelStructure} from '../../utils/types';
 import {CitiesList, RenderType} from '../../utils/constants';
 import {getFilteredHotels, getPlace} from '../../utils';
-import {getActiveCity} from '../../store/user-reducer/selectors';
 
 import {Places, NoPlaces, Header} from '..';
 
-const ScreenMain = ({hotels, onClickHotel, activeCity, onClickTabLocation}) => {
-
+const ScreenMain = ({hotels, onClickHotel}) => {
+  const {activeCity} = useSelector((state) => state.USER);
   const hotelsFilteredByCity = getFilteredHotels(activeCity.name, hotels);
+  const dispatch = useDispatch();
 
   return (
     <div className="page page--gray page--main">
@@ -27,7 +27,7 @@ const ScreenMain = ({hotels, onClickHotel, activeCity, onClickTabLocation}) => {
                     <a
                       onClick={(evt) => {
                         evt.preventDefault();
-                        onClickTabLocation(getPlace(hotels, currentCityName));
+                        dispatch(setActiveCity(getPlace(hotels, currentCityName)));
                       }}
                       className={`locations__item-link tabs__item ${(activeCity.name === currentCityName) && `tabs__item--active`}`}>
                       <span>{currentCityName}</span>
@@ -47,19 +47,6 @@ const ScreenMain = ({hotels, onClickHotel, activeCity, onClickTabLocation}) => {
 ScreenMain.propTypes = {
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
   onClickHotel: PropTypes.func.isRequired,
-  activeCity: PropTypes.shape(cityStructure).isRequired,
-  onClickTabLocation: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  activeCity: getActiveCity(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onClickTabLocation(newSelectedCity) {
-    dispatch(setActiveCity(newSelectedCity));
-  }
-});
-
-export {ScreenMain};
-export default connect(mapStateToProps, mapDispatchToProps)(ScreenMain);
+export default ScreenMain;

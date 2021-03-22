@@ -1,15 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
-import {hotelStructure} from '../../utils/types';
 import {JumpTo, WarningType} from '../../utils/constants';
 import browserHistory from '../../browser-history';
-import {getHotels, getIsHotelsLoaded} from '../../store/user-reducer/selectors';
 
 import {ScreenMain, ScreenLogin, ScreenFavorites, ScreenRoom, ScreenWarning, ScreenLoading, PrivateRoute} from '..';
 
-const App = ({hotels, isHotelsLoaded}) => {
+const App = () => {
+  const {hotels, isHotelsLoaded} = useSelector((state) => state.USER);
 
   if (!isHotelsLoaded) {
     return (
@@ -52,7 +50,9 @@ const App = ({hotels, isHotelsLoaded}) => {
             <ScreenRoom
               id={match.params.id}
               hotels={hotels}
-              onClickHotel={(id) => history.push(`${JumpTo.OFFER}/${id}`)}
+              onClickHotel={
+                (id) => history.push(`${JumpTo.OFFER}/${id}`)
+              }
             />
           )}
         />
@@ -64,19 +64,7 @@ const App = ({hotels, isHotelsLoaded}) => {
   );
 };
 
-App.propTypes = {
-  hotels: PropTypes.arrayOf(hotelStructure),
-  isHotelsLoaded: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  hotels: getHotels(state),
-  isHotelsLoaded: getIsHotelsLoaded(state),
-});
-
-export {App};
-export default connect(mapStateToProps, null)(App);
-
+export default App;
 
 // Router as BrowserRouter. Компонент `BrowserRouter` автоматически создаёт объект для работы с историей.
 // Раз так, то нам необходимо чтобы `Router` пользовался нашим экземпляром объекта `history`, а не собственным.

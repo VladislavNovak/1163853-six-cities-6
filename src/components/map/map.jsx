@@ -1,10 +1,9 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import leaflet from 'leaflet';
 import {cityStructure, hotelStructure} from '../../utils/types';
 import {MarkerType, NOT_INITIALIZED} from '../../utils/constants';
-import {getHighlightHotelID} from '../../store/user-reducer/selectors';
 
 import "leaflet/dist/leaflet.css";
 
@@ -40,7 +39,8 @@ const removeMarkers = (map) => {
   });
 };
 
-const Map = ({mapType, city, hotels, highlightHotelID}) => {
+const Map = ({mapType, city, hotels}) => {
+  const {highlightHotelID} = useSelector((state) => state.USER);
   const {lat, lng, zoom} = city;
   const mapRef = useRef();
 
@@ -85,15 +85,9 @@ Map.propTypes = {
   mapType: PropTypes.string.isRequired,
   city: PropTypes.shape(cityStructure).isRequired,
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  highlightHotelID: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  highlightHotelID: getHighlightHotelID(state),
-});
-
-export {Map};
-export default connect(mapStateToProps, null)(Map);
+export default Map;
 
 // city - город, на котором карта изначально сфокусирована
 // leaflet.marker.addTo - устанавливает маркер и привязывает к карте
