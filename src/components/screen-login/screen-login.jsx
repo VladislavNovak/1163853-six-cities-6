@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {login} from '../../store/api-action';
+import {REGULAR_EMAIL_TEMPLATE} from '../../utils/constants';
 
 import {Header} from '..';
 
@@ -12,10 +13,12 @@ const ScreenLogin = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    dispatch(login({
-      login: loginRef.current.value,
-      password: passwordRef.current.value,
-    }));
+    if (REGULAR_EMAIL_TEMPLATE.test(loginRef.current.value)) {
+      dispatch(login({
+        login: loginRef.current.value,
+        password: passwordRef.current.value,
+      }));
+    }
   };
 
   return (
