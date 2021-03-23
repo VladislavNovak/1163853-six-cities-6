@@ -1,28 +1,24 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {hotelStructure, reviewStructure} from '../../utils/types';
+import {useSelector, useDispatch} from 'react-redux';
+import {hotelStructure} from '../../utils/types';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
 import {getPlace, isHotelIDFound} from '../../utils';
 import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
 import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../store/action';
-import {getActiveHotel, getActiveHotelReloaded, getComments, getNearbyHotels} from '../../store/user-reducer/selectors';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
-const ScreenRoom = ({
-  id,
-  activeHotel: hotel,
-  hotels,
-  nearbyHotels,
-  comments,
-  onClickHotel,
-  getIDToServerRequest,
-  activeHotelReloaded,
-  sendCommentToServer,
-  changeLastCommentLoadingStatus,
-  sendFavoriteToServer,
-}) => {
+const ScreenRoom = ({id, hotels, onClickHotel}) => {
+  const {activeHotel: hotel, comments, nearbyHotels, activeHotelReloaded} = useSelector((state) => state.USER);
+
+  const dispatch = useDispatch();
+  const getIDToServerRequest = (hotelID) => {
+    dispatch(refreshHotelDataLoadStatus(false));
+    dispatch(fetchActiveHotel(hotelID));
+    dispatch(fetchComments(hotelID));
+    dispatch(fetchNearbyHotels(hotelID));
+  };
 
   if (!isHotelIDFound(hotels, id)) {
     return <ScreenWarning warning={WarningType.INVALID_HOTEL_ID} />;
@@ -38,20 +34,26 @@ const ScreenRoom = ({
     return <ScreenLoading />;
   }
 
-  const extendComment = (comment) => {
-    sendCommentToServer({...comment, id}).catch(() => {
-      changeLastCommentLoadingStatus(LoadingStatus.ERROR);
-    });
-  };
-
-  const handleChangeFavoriteStatus = () => {
-    sendFavoriteToServer({id, newFavoriteStatus: Number(!isFavorite)});
-  };
-
   const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
   const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
   const currentCity = getPlace(hotels, cityName);
   const threeNearestHotels = nearbyHotels.slice(0, 3);
+
+  const sendCommentToServer = (comment) => {
+    dispatch(setLastCommentLoadingStatus(LoadingStatus.SENT));
+    return dispatch(sendUpdatedComment(comment));
+  };
+
+  const extendComment = (comment) => {
+    sendCommentToServer({...comment, id}).catch(() => {
+      dispatch(setLastCommentLoadingStatus(LoadingStatus.ERROR));
+    });
+  };
+
+  const handleChangeFavoriteStatus = () => {
+    dispatch(refreshHotelDataLoadStatus(false));
+    dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+  };
 
   return (
     <div className="page">
@@ -167,47 +169,8 @@ const ScreenRoom = ({
 
 ScreenRoom.propTypes = {
   id: PropTypes.string.isRequired,
-  activeHotelReloaded: PropTypes.bool.isRequired,
-  activeHotel: PropTypes.shape(hotelStructure).isRequired,
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  nearbyHotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  comments: PropTypes.arrayOf(reviewStructure).isRequired,
   onClickHotel: PropTypes.func.isRequired,
-  getIDToServerRequest: PropTypes.func.isRequired,
-  sendCommentToServer: PropTypes.func.isRequired,
-  changeLastCommentLoadingStatus: PropTypes.func.isRequired,
-  sendFavoriteToServer: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  activeHotel: getActiveHotel(state),
-  comments: getComments(state),
-  nearbyHotels: getNearbyHotels(state),
-  activeHotelReloaded: getActiveHotelReloaded(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getIDToServerRequest(id) {
-    dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(fetchActiveHotel(id));
-    dispatch(fetchComments(id));
-    dispatch(fetchNearbyHotels(id));
-  },
-
-  changeLastCommentLoadingStatus(status) {
-    dispatch(setLastCommentLoadingStatus(status));
-  },
-
-  sendFavoriteToServer(favoriteStatus) {
-    dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(sendUpdatedFavoriteState(favoriteStatus));
-  },
-
-  sendCommentToServer(comment) {
-    dispatch(setLastCommentLoadingStatus(LoadingStatus.SENT));
-    return dispatch(sendUpdatedComment(comment));
-  },
-});
-
-export {ScreenRoom};
-export default connect(mapStateToProps, mapDispatchToProps)(ScreenRoom);
+export default ScreenRoom;

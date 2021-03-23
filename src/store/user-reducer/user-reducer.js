@@ -1,5 +1,6 @@
 import {getPlace, updatedHotelsList} from '../../utils';
-import {ActionType} from '../action';
+import {createReducer} from '@reduxjs/toolkit';
+import {highlightHotelID, loadComments, loadHotels, loadNearestHotels, loadUserEmail, refreshHotelData, refreshHotelDataLoadStatus, setActiveCity, setActiveSort, setLastCommentLoadingStatus} from '../action';
 import {CitiesList, SortType, LoadingStatus} from '../../utils/constants';
 
 const initialState = {
@@ -16,35 +17,40 @@ const initialState = {
   userEmail: ``,
 };
 
-const userReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionType.LOAD_HOTELS:
-      return {...state, isHotelsLoaded: true, hotels: action.payload, activeCity: getPlace(action.payload, CitiesList[0])};
-    case ActionType.LOAD_NEARBY_HOTELS:
-      return {...state, nearbyHotels: action.payload};
-    case ActionType.SET_ACTIVE_CITY:
-      return {...state, activeCity: action.payload};
-    case ActionType.HIGHLIGHT_HOTEL_ID:
-      return {...state, highlightHotelID: action.payload};
-    case ActionType.SET_ACTIVE_SORT:
-      return {...state, activeSort: action.payload};
-    case ActionType.LOAD_COMMENTS:
-      return {...state, comments: action.payload};
-    case ActionType.SET_LAST_COMMENT_LOADING_STATUS:
-      return {...state, lastCommentLoadingStatus: action.payload};
-    case ActionType.REFRESH_HOTEL_DATA:
-      return {
-        ...state,
-        activeHotel: action.payload,
-        hotels: updatedHotelsList(state.hotels, action.payload),
-      };
-    case ActionType.REFRESH_HOTEL_DATA_LOAD_STATUS:
-      return {...state, activeHotelReloaded: action.payload};
-    case ActionType.LOAD_USER_EMAIL:
-      return {...state, userEmail: action.payload};
-    default:
-      return state;
-  }
-};
+const userReducer = createReducer(initialState, (builder) => {
+  builder.addCase(loadHotels, (state, action) => {
+    state.isHotelsLoaded = true;
+    state.hotels = action.payload;
+    state.activeCity = getPlace(action.payload, CitiesList[0]);
+  });
+  builder.addCase(loadNearestHotels, (state, action) => {
+    state.nearbyHotels = action.payload;
+  });
+  builder.addCase(setActiveCity, (state, action) => {
+    state.activeCity = action.payload;
+  });
+  builder.addCase(highlightHotelID, (state, action) => {
+    state.highlightHotelID = action.payload;
+  });
+  builder.addCase(setActiveSort, (state, action) => {
+    state.activeSort = action.payload;
+  });
+  builder.addCase(loadComments, (state, action) => {
+    state.comments = action.payload;
+  });
+  builder.addCase(setLastCommentLoadingStatus, (state, action) => {
+    state.lastCommentLoadingStatus = action.payload;
+  });
+  builder.addCase(refreshHotelData, (state, action) => {
+    state.activeHotel = action.payload;
+    state.hotels = updatedHotelsList(state.hotels, action.payload);
+  });
+  builder.addCase(refreshHotelDataLoadStatus, (state, action) => {
+    state.activeHotelReloaded = action.payload;
+  });
+  builder.addCase(loadUserEmail, (state, action) => {
+    state.userEmail = action.payload;
+  });
+});
 
 export {userReducer};

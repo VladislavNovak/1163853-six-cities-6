@@ -32,7 +32,7 @@ export const createAPI = (onUnauthorized) => {
   return api;
 };
 
-// createAPI - возвращает настроенныйобъект axios
+// createAPI - возвращает настроенный объект axios
 // withCredentials - указывает, нужно ли использовать куки. В случае этого проекта,
 //    авторизация построена на куках, поэтому ключ true
 // api.interceptors - перехватывают коллбэки и перенаправляют выполнение на onSuccess или на onFail. Объяснение:

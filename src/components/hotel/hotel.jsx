@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import {RATING_MULTIPLIER} from '../../utils/constants';
 import {highlightHotelID, refreshHotelDataLoadStatus} from '../../store/action';
 import {hotelStructure} from '../../utils/types';
 import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedFavoriteState} from '../../store/api-action';
-import {getActiveHotelReloaded} from '../../store/user-reducer/selectors';
 import HotelPicture from '../hotel-picture/hotel-picture';
 
 const Hotel = ({
@@ -14,29 +13,36 @@ const Hotel = ({
   isRenderFavoriteHotels,
   isRenderNearestHotels,
   onClickHotel,
-  onMouseOverHotel,
-  getIDToServerRequest,
-  sendFavoriteToServer,
-  activeHotelReloaded,
 }) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
   const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
 
+  const {activeHotelReloaded, activeHotel} = useSelector((state) => state.USER);
+  const dispatch = useDispatch();
+
+  const getIDToServerRequest = (hotelID) => {
+    dispatch(refreshHotelDataLoadStatus(false));
+    dispatch(fetchActiveHotel(hotelID));
+    dispatch(fetchComments(hotelID));
+    dispatch(fetchNearbyHotels(hotelID));
+  };
+
+  const handleChangeFavoriteStatus = () => {
+    dispatch(refreshHotelDataLoadStatus(false));
+    dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+  };
+
   useEffect(() => {
-    if (!activeHotelReloaded) {
+    if (!activeHotelReloaded && activeHotel.id === id) {
       getIDToServerRequest(id);
     }
   }, [activeHotelReloaded]);
-
-  const handleChangeFavoriteStatus = () => {
-    sendFavoriteToServer({id, newFavoriteStatus: Number(!isFavorite)});
-  };
 
   return (
     <article
       onMouseOver={(evt) => {
         evt.preventDefault();
-        onMouseOverHotel(id);
+        dispatch(highlightHotelID(id));
       }}
       className={
         isRenderAllHotels && `cities__place-card place-card` ||
@@ -89,33 +95,6 @@ Hotel.propTypes = {
   isRenderFavoriteHotels: PropTypes.bool.isRequired,
   isRenderNearestHotels: PropTypes.bool.isRequired,
   onClickHotel: PropTypes.func.isRequired,
-  onMouseOverHotel: PropTypes.func.isRequired,
-  getIDToServerRequest: PropTypes.func.isRequired,
-  sendFavoriteToServer: PropTypes.func.isRequired,
-  activeHotelReloaded: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  activeHotelReloaded: getActiveHotelReloaded(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getIDToServerRequest(id) {
-    dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(fetchActiveHotel(id));
-    dispatch(fetchComments(id));
-    dispatch(fetchNearbyHotels(id));
-  },
-
-  sendFavoriteToServer(favoriteStatus) {
-    dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(sendUpdatedFavoriteState(favoriteStatus));
-  },
-
-  onMouseOverHotel(id) {
-    dispatch(highlightHotelID(id));
-  },
-});
-
-export {Hotel};
-export default connect(mapStateToProps, mapDispatchToProps)(Hotel);
+export default Hotel;

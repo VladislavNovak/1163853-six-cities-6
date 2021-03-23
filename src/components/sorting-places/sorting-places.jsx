@@ -1,17 +1,18 @@
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {KeyCode, RenderType, SortType} from '../../utils/constants';
 import {cityStructure, hotelStructure} from '../../utils/types';
 import {setActiveSort} from '../../store/action';
 import {getSortedHotels} from '../../utils';
-import {getActiveSort} from '../../store/user-reducer/selectors';
 
 import {HotelsList} from '..';
 
-const SortingPlaces = ({currentCity, hotels, onClickHotel, activeSort, onClickActiveSort}) => {
+const SortingPlaces = ({currentCity, hotels, onClickHotel}) => {
   const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
   const sortRef = useRef();
+  const dispatch = useDispatch();
+  const {activeSort} = useSelector((state) => state.USER);
   const sortedHotels = getSortedHotels(hotels, activeSort);
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const SortingPlaces = ({currentCity, hotels, onClickHotel, activeSort, onClickAc
               <li
                 key={sort}
                 onClick={() => {
-                  onClickActiveSort(sort);
+                  dispatch(setActiveSort(sort));
                   setIsOptionsOpen(false);
                 }}
                 className={`places__option ${activeSort}`}
@@ -85,19 +86,6 @@ SortingPlaces.propTypes = {
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
   onClickHotel: PropTypes.func.isRequired,
   currentCity: PropTypes.shape(cityStructure).isRequired,
-  activeSort: PropTypes.string.isRequired,
-  onClickActiveSort: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  activeSort: getActiveSort(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onClickActiveSort(sort) {
-    dispatch(setActiveSort(sort));
-  }
-});
-
-export {SortingPlaces};
-export default connect(mapStateToProps, mapDispatchToProps)(SortingPlaces);
+export default SortingPlaces;
