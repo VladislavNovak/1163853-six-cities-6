@@ -3,17 +3,38 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
 import browserHistory from '../../browser-history';
 import PropTypes from 'prop-types';
-import {RATING_MULTIPLIER, JumpTo, AuthorizationStatus} from '../../utils/constants';
+import {RATING_MULTIPLIER, JumpTo, AuthorizationStatus, RenderType} from '../../utils/constants';
 import {highlightHotelID, refreshHotelDataLoadStatus} from '../../store/action';
 import {hotelStructure} from '../../utils/types';
 import {sendUpdatedFavoriteState} from '../../store/api-action';
+import {getMarkupStyle} from '../../utils';
 
-const Hotel = ({
-  hotel,
-  isRenderAllHotels,
-  isRenderFavoriteHotels,
-  isRenderNearestHotels,
-}) => {
+const Hotel = ({hotel, renderType}) => {
+
+  const ArticleStyle = {
+    ALL_HOTELS: `cities__place-card place-card`,
+    FAVORITE_HOTELS: `favorites__card place-card`,
+    NEAR_HOTELS: `near-places__card place-card`,
+  };
+
+  const LinkWrapperStyle = {
+    ALL_HOTELS: `cities__image-wrapper place-card__image-wrapper`,
+    FAVORITE_HOTELS: `favorites__image-wrapper place-card__image-wrapper`,
+    NEAR_HOTELS: `near-places__image-wrapper place-card__image-wrapper`,
+  };
+
+  const ImageWidthStyle = {
+    ALL_HOTELS: `260`,
+    FAVORITE_HOTELS: `150`,
+    NEAR_HOTELS: `260`,
+  };
+
+  const ImageHeightStyle = {
+    ALL_HOTELS: `200`,
+    FAVORITE_HOTELS: `110`,
+    NEAR_HOTELS: `200`,
+  };
+
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
   const styleRating = {width: `${Math.round(Number(rating)) * RATING_MULTIPLIER}%`};
   const {authorizationStatus} = useSelector((state) => state.AUTH);
@@ -28,32 +49,26 @@ const Hotel = ({
     }
   };
 
+  const handleMouseOver = () => {
+    dispatch(highlightHotelID(id));
+  };
+
   return (
     <article
-      onMouseOver={(evt) => {
-        evt.preventDefault();
-        dispatch(highlightHotelID(id));
-      }}
-      className={
-        isRenderAllHotels && `cities__place-card place-card` ||
-        isRenderFavoriteHotels && `favorites__card place-card` ||
-        isRenderNearestHotels && `near-places__card place-card`}>
-      {isPremium && isRenderAllHotels && (<div className="place-card__mark"><span>Premium</span></div>)}
-      <div
-        className={
-          isRenderAllHotels && `cities__image-wrapper place-card__image-wrapper` ||
-          isRenderFavoriteHotels && `favorites__image-wrapper place-card__image-wrapper` ||
-          isRenderNearestHotels && `near-places__image-wrapper place-card__image-wrapper`}>
+      onMouseOver={renderType !== RenderType.NEAR_HOTELS ? handleMouseOver : undefined}
+      className={getMarkupStyle(renderType, ArticleStyle)}>
+      {(isPremium && renderType === RenderType.ALL_HOTELS) ? (<div className="place-card__mark"><span>Premium</span></div>) : null}
+      <div className={getMarkupStyle(renderType, LinkWrapperStyle)}>
         <Link to={`${JumpTo.OFFER}/${id}`}>
           <img
             className="place-card__image"
             src={preview}
-            width={(isRenderAllHotels || isRenderNearestHotels) && `260` || isRenderFavoriteHotels && `150`}
-            height={(isRenderAllHotels || isRenderNearestHotels) && `200` || isRenderFavoriteHotels && `110`}
+            width={getMarkupStyle(renderType, ImageWidthStyle)}
+            height={getMarkupStyle(renderType, ImageHeightStyle)}
             alt={`${title} image`}/>
         </Link>
       </div>
-      <div className={`${isRenderFavoriteHotels ? `favorites__card-info` : null} place-card__info`}>
+      <div className={`${renderType === RenderType.FAVORITE_HOTELS ? `favorites__card-info` : null} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>
@@ -86,9 +101,8 @@ const Hotel = ({
 
 Hotel.propTypes = {
   hotel: PropTypes.shape(hotelStructure).isRequired,
-  isRenderAllHotels: PropTypes.bool.isRequired,
-  isRenderFavoriteHotels: PropTypes.bool.isRequired,
-  isRenderNearestHotels: PropTypes.bool.isRequired,
+
+  renderType: PropTypes.string.isRequired,
 };
 
 export default Hotel;

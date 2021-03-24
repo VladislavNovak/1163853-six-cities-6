@@ -1,4 +1,4 @@
-import {SortType} from "./constants";
+import {RenderType, SortType} from "./constants";
 
 // Принимает массив отелей
 // Возвращает объект с ключами из городов и значениями из массивов гостиниц
@@ -52,3 +52,11 @@ export const isHotelIDFound = (hotels, id) => {
 export const updatedHotelsList = (hotels, update) => {
   return hotels.map((hotel) => hotel.id === update.id ? update : hotel);
 };
+
+// Получает тип рендера - constants/RenderType и набор стилей
+// Возвращает нужный стиль
+export const getMarkupStyle = (type, stilization) => ({
+  [RenderType.ALL_HOTELS]: stilization.ALL_HOTELS,
+  [RenderType.FAVORITE_HOTELS]: stilization.FAVORITE_HOTELS,
+  [RenderType.NEAR_HOTELS]: stilization.NEAR_HOTELS,
+})[type];

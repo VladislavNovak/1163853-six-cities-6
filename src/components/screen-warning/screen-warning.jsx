@@ -10,7 +10,7 @@ import {
   NotFoundH2,
   NotFoundP,
   NotFoundLink,
-} from "./screen-warning-style";
+} from "./screen-warning.style";
 
 const ScreenWarning = ({warning}) => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FIVE_STARS, LoadingStatus, ReviewLength} from '../../utils/constants';
-import {Textarea} from './review-stile';
+import {Textarea} from './review-form.stile';
 
 const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, handleChangeTextarea, lastCommentLoadingStatus, tale}) => {
   const allowSendingForm = () => !(tale.length > ReviewLength.MIN && tale.length < ReviewLength.MAX && Number(selectedStars));

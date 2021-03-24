@@ -57,12 +57,10 @@ const ScreenRoom = ({id}) => {
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              {
-                images.map((image, index) => (
-                  <div key={index} className="property__image-wrapper">
-                    <img className="property__image" src={image} alt="Photo studio"/>
-                  </div>
-                ))
+              {images.map((image, index) => (
+                <div key={index} className="property__image-wrapper">
+                  <img className="property__image" src={image} alt="Photo studio"/>
+                </div>))
               }
             </div>
           </div>
@@ -102,12 +100,10 @@ const ScreenRoom = ({id}) => {
               <div className="property__inside">
                 <h2 className="property__inside-title">What&apos;s inside</h2>
                 <ul className="property__inside-list">
-                  {
-                    services.map((service, index) => (
-                      <li key={`${service}-${index}`} className="property__inside-item">
-                        {service}
-                      </li>
-                    ))
+                  {services.map((service, index) => (
+                    <li key={`${service}-${index}`} className="property__inside-item">
+                      {service}
+                    </li>))
                   }
                 </ul>
               </div>
@@ -117,25 +113,15 @@ const ScreenRoom = ({id}) => {
                   <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
                     <img className="property__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar"/>
                   </div>
-                  <span className="property__user-name">
-                    {hostName}
-                  </span>
-                  {
-                    hostIsPro && (
-                      <span className="property__user-status">
-                        Pro
-                      </span>
-                    )
-                  }
+                  <span className="property__user-name">{hostName}</span>
+                  {hostIsPro && <span className="property__user-status">Pro</span>}
                 </div>
-                {
-                  (description.length !== 0) && (
-                    <div className="property__description">
-                      <p className="property__text">
-                        {description}
-                      </p>
-                    </div>
-                  )
+                {(description.length !== 0) && (
+                  <div className="property__description">
+                    <p className="property__text">
+                      {description}
+                    </p>
+                  </div>)
                 }
               </div>
               <Review

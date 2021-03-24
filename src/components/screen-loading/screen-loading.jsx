@@ -1,6 +1,6 @@
 import React from 'react';
 import {WarningType} from '../../utils/constants';
-import {Loading, LoadingWrapper} from './screen-loading-style';
+import {Loading, LoadingWrapper} from './screen-loading.style';
 
 const ScreenLoading = () => {
   const styleText = {
