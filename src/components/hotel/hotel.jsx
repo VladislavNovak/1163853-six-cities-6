@@ -101,7 +101,6 @@ const Hotel = ({hotel, renderType}) => {
 
 Hotel.propTypes = {
   hotel: PropTypes.shape(hotelStructure).isRequired,
-
   renderType: PropTypes.string.isRequired,
 };
 
