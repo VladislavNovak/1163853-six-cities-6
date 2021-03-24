@@ -5,13 +5,14 @@ import {reviewStructure} from '../../utils/types';
 import {RATING_MULTIPLIER} from '../../utils/constants';
 
 const ReviewsList = ({comments}) => {
+  const prepareComments = comments.slice(0, 10).sort((a, b) => dayjs(b.date) - dayjs(a.date));
 
   return (
     <React.Fragment>
       <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length}</span></h2>
       <ul className="reviews__list">
         {
-          comments.map(({id, visitorAvatar, visitorName, rating, quote, date}) => {
+          prepareComments.map(({id, visitorAvatar, visitorName, rating, quote, date}) => {
             const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
 
             return (
