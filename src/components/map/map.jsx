@@ -2,12 +2,11 @@ import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import leaflet from 'leaflet';
-import {cityStructure, hotelStructure} from '../../utils/types';
-import {MarkerType, NOT_INITIALIZED} from '../../utils/constants';
+import {MapType, MarkerType, NOT_INITIALIZED} from '../../utils/constants';
 
 import "leaflet/dist/leaflet.css";
 
-const createMarkers = (map, hotels, highlightHotelID) => {
+const createMarkers = (map, hotels, highlightHotel) => {
   const markers = [];
   let prevId = NOT_INITIALIZED;
 
@@ -16,7 +15,7 @@ const createMarkers = (map, hotels, highlightHotelID) => {
   const pinHotelHighlighted = leaflet.icon(MarkerType.pinHotelHighlighted);
 
   hotels.forEach(({id, latitude, longitude, title}) => {
-    markers[id] = leaflet.marker({lat: latitude, lng: longitude}, {icon: id !== highlightHotelID ? pin : pinHotelHighlighted})
+    markers[id] = leaflet.marker({lat: latitude, lng: longitude}, {icon: id !== highlightHotel ? pin : pinHotelHighlighted})
       .addTo(map)
       .bindPopup(title);
 
@@ -39,12 +38,15 @@ const removeMarkers = (map) => {
   });
 };
 
-const Map = ({mapType, city, hotels}) => {
-  const {highlightHotelID} = useSelector((state) => state.USER);
-  const {lat, lng, zoom} = city;
+const Map = ({mapType}) => {
+  const {highlightHotelID, hotels, activeHotel, nearbyHotels, activeCity: city} = useSelector((state) => state.USER);
+
+  const prepareHotels = mapType === MapType.MAIN_MAP ? hotels : [activeHotel, ...nearbyHotels.slice(0, 3)];
+  const highlightHotel = mapType === MapType.MAIN_MAP ? highlightHotelID : activeHotel.id;
   const mapRef = useRef();
 
   useEffect(() => {
+    const {lat, lng, zoom} = city;
     mapRef.current = leaflet.map(`map`, {
       center: {lat, lng},
       zoom,
@@ -61,18 +63,18 @@ const Map = ({mapType, city, hotels}) => {
         })
         .addTo(mapRef.current);
 
-    createMarkers(mapRef.current, hotels, highlightHotelID);
+    createMarkers(mapRef.current, prepareHotels, highlightHotel);
 
     return () => {
       mapRef.current.remove();
     };
-  }, [lat, lng, hotels]);
+  }, [city]);
 
   useEffect(() => {
     removeMarkers(mapRef.current);
 
-    createMarkers(mapRef.current, hotels, highlightHotelID);
-  }, [highlightHotelID]);
+    createMarkers(mapRef.current, prepareHotels, highlightHotel);
+  }, [highlightHotel]);
 
   return (
     <div className="cities__right-section">
@@ -83,8 +85,6 @@ const Map = ({mapType, city, hotels}) => {
 
 Map.propTypes = {
   mapType: PropTypes.string.isRequired,
-  city: PropTypes.shape(cityStructure).isRequired,
-  hotels: PropTypes.arrayOf(hotelStructure).isRequired,
 };
 
 export default Map;

@@ -13,9 +13,7 @@ const Places = ({currentCity, hotels}) => {
           currentCity={currentCity}
           hotels={hotels} />
         <Map
-          mapType={MapType.MAIN_MAP}
-          city={currentCity}
-          hotels={hotels}/>
+          mapType={MapType.MAIN_MAP} />
       </div>
     </div>
   );

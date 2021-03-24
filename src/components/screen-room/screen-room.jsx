@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
-import {getPlace, isHotelIDFound} from '../../utils';
+import {isHotelIDFound} from '../../utils';
 import {fetchActualRoomInfo, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
 import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../store/action';
 
@@ -29,9 +29,8 @@ const ScreenRoom = ({id}) => {
     return <ScreenLoading />;
   }
 
-  const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description, cityName} = hotel;
+  const {isPremium, title, isFavorite, price, type, rating, images, bedrooms, adults, services, hostName, hostIsPro, description} = hotel;
   const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
-  const currentCity = getPlace(hotels, cityName);
   const threeNearestHotels = nearbyHotels.slice(0, 3);
 
   const sendCommentToServer = (comment) => {
@@ -129,10 +128,7 @@ const ScreenRoom = ({id}) => {
                 comments={comments} />
             </div>
           </div>
-          <Map
-            mapType={MapType.OFFER_MAP}
-            city={currentCity}
-            hotels={[hotel, ...threeNearestHotels]}/>
+          <Map mapType={MapType.OFFER_MAP} />
         </section>
         <div className="container">
           <section className="near-places places">
