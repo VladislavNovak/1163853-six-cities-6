@@ -9,7 +9,7 @@ import {Logo} from '..';
 const Header = ({classNameForLogoLink}) => {
   const {authorizationStatus} = useSelector((state) => state.AUTH);
   const {userEmail} = useSelector((state) => state.USER);
-  const path = (AuthorizationStatus.AUTH === authorizationStatus) ? JumpTo.ROOT : JumpTo.LOGIN;
+  const path = (AuthorizationStatus.AUTH === authorizationStatus) ? JumpTo.FAVORITES : JumpTo.LOGIN;
   const title = (AuthorizationStatus.AUTH === authorizationStatus) ? userEmail : `Sign in`;
 
   return (
