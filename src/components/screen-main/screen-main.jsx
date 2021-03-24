@@ -22,12 +22,11 @@ const ScreenMain = () => {
               {
                 CitiesList.map((currentCityName) => (
                   <li key={currentCityName} className="locations__item">
-                    <a
-                      onClick={(evt) => {
-                        evt.preventDefault();
-                        dispatch(setActiveCity(getPlace(hotels, currentCityName)));
-                      }}
-                      className={`locations__item-link tabs__item ${(activeCity.name === currentCityName) && `tabs__item--active`}`}>
+                    <a onClick={(evt) => {
+                      evt.preventDefault();
+                      dispatch(setActiveCity(getPlace(hotels, currentCityName)));
+                    }}
+                    className={`locations__item-link tabs__item ${(activeCity.name === currentCityName) && `tabs__item--active`}`}>
                       <span>{currentCityName}</span>
                     </a>
                   </li>
@@ -36,7 +35,7 @@ const ScreenMain = () => {
             </ul>
           </section>
         </div>
-        {hotelsFilteredByCity.length ? <Places currentCity={activeCity} hotels={hotelsFilteredByCity} /> : <NoPlaces />}
+        {hotelsFilteredByCity.length ? <Places /> : <NoPlaces />}
       </main>
     </div>
   );

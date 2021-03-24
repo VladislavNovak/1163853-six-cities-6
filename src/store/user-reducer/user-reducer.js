@@ -1,6 +1,6 @@
 import {getPlace, updatedHotelsList} from '../../utils';
 import {createReducer} from '@reduxjs/toolkit';
-import {highlightHotelID, loadComments, loadHotels, loadNearestHotels, loadUserEmail, refreshHotelData, refreshHotelDataLoadStatus, setActiveCity, setActiveSort, setLastCommentLoadingStatus} from '../action';
+import {highlightHotelID, loadComments, loadHotels, loadNearestHotels, loadUserInfo, refreshHotelData, refreshHotelDataLoadStatus, setActiveCity, setActiveSort, setLastCommentLoadingStatus} from '../action';
 import {CitiesList, SortType, LoadingStatus} from '../../utils/constants';
 
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
   lastCommentLoadingStatus: LoadingStatus.DEFAULT,
   highlightHotelID: ``,
   activeSort: SortType.POPULAR,
-  userEmail: ``,
+  userInfo: {},
 };
 
 const userReducer = createReducer(initialState, (builder) => {
@@ -48,8 +48,8 @@ const userReducer = createReducer(initialState, (builder) => {
   builder.addCase(refreshHotelDataLoadStatus, (state, action) => {
     state.activeHotelReloaded = action.payload;
   });
-  builder.addCase(loadUserEmail, (state, action) => {
-    state.userEmail = action.payload;
+  builder.addCase(loadUserInfo, (state, action) => {
+    state.userInfo = action.payload;
   });
 });
 

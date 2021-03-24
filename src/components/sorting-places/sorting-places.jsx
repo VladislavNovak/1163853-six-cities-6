@@ -1,19 +1,18 @@
 import React, {useEffect, useRef} from 'react';
-import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 import {KeyCode, RenderType, SortType} from '../../utils/constants';
-import {cityStructure, hotelStructure} from '../../utils/types';
 import {setActiveSort} from '../../store/action';
-import {getSortedHotels} from '../../utils';
+import {getFilteredHotels, getSortedHotels} from '../../utils';
 
 import {HotelsList} from '..';
 
-const SortingPlaces = ({currentCity, hotels}) => {
+const SortingPlaces = () => {
   const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
   const sortRef = useRef();
   const dispatch = useDispatch();
-  const {activeSort} = useSelector((state) => state.USER);
-  const sortedHotels = getSortedHotels(hotels, activeSort);
+  const {activeCity, hotels, activeSort} = useSelector((state) => state.USER);
+  const hotelsFilteredByCity = getFilteredHotels(activeCity.name, hotels);
+  const sortedHotels = getSortedHotels(hotelsFilteredByCity, activeSort);
 
   useEffect(() => {
     document.body.addEventListener(`click`, handleOutsideClick);
@@ -40,7 +39,7 @@ const SortingPlaces = ({currentCity, hotels}) => {
   return (
     <section className="cities__places places">
       <h2 className="visually-hidden">Places</h2>
-      <b className="places__found">{`${hotels.length} places to stay in ${currentCity.name}`}</b>
+      <b className="places__found">{`${hotelsFilteredByCity.length} places to stay in ${activeCity.name}`}</b>
       <form className="places__sorting" action="#" method="get">
         <span className="places__sorting-caption">Sort by</span>
         <span
@@ -79,11 +78,6 @@ const SortingPlaces = ({currentCity, hotels}) => {
         renderType={RenderType.ALL_HOTELS}/>
     </section>
   );
-};
-
-SortingPlaces.propTypes = {
-  hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  currentCity: PropTypes.shape(cityStructure).isRequired,
 };
 
 export default SortingPlaces;

@@ -8,11 +8,6 @@ import {Header} from '..';
 
 const ScreenLogin = () => {
   const {authorizationStatus} = useSelector((state) => state.AUTH);
-
-  if (authorizationStatus === AuthorizationStatus.AUTH) {
-    return <Redirect to={JumpTo.ROOT} />;
-  }
-
   const dispatch = useDispatch();
   const loginRef = useRef();
   const passwordRef = useRef();
@@ -27,6 +22,10 @@ const ScreenLogin = () => {
       }));
     }
   };
+
+  if (authorizationStatus === AuthorizationStatus.AUTH) {
+    return <Redirect to={JumpTo.ROOT} />;
+  }
 
   return (
     <div className="page page--gray page--login">

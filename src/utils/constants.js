@@ -42,7 +42,7 @@ export const ServerRequest = {
 
 export const ReviewLength = {
   MIN: 49,
-  MAX: 300
+  MAX: 301
 };
 
 export const LoadingStatus = {

@@ -13,7 +13,7 @@ export const ActionType = {
   REQUIRED_AUTHORIZATION: `user/requireAuthorization`,
   LOGOUT: `user/logout`,
   REDIRECT_TO_ROUTE: `screenLogin/REDIRECT_TO_ROUTE`,
-  LOAD_USER_EMAIL: `server/loadUserEmail`,
+  LOAD_USER_INFO: `server/loadUserInfo`,
 };
 
 export const loadHotels = createAction(ActionType.LOAD_HOTELS, (hotels) => ({payload: hotels}));
@@ -28,7 +28,7 @@ export const setActiveSort = createAction(ActionType.SET_ACTIVE_SORT, (sort) => 
 export const requireAuthorization = createAction(ActionType.REQUIRED_AUTHORIZATION, (status) => ({payload: status}));
 export const logout = createAction(ActionType.LOGOUT, (status) => ({payload: status}));
 export const redirectToRoute = createAction(ActionType.REDIRECT_TO_ROUTE, (url) => ({payload: url}));
-export const loadUserEmail = createAction(ActionType.LOAD_USER_EMAIL, (email) => ({payload: email}));
+export const loadUserInfo = createAction(ActionType.LOAD_USER_INFO, (info) => ({payload: info}));
 
 // Логика:
 // в mapDispatchToProps передаётся коллбэк
