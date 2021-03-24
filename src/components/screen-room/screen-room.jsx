@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
-import {hotelStructure} from '../../utils/types';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
 import {getPlace, isHotelIDFound} from '../../utils';
 import {fetchActualRoomInfo, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
@@ -9,8 +8,8 @@ import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../sto
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
-const ScreenRoom = ({id, hotels}) => {
-  const {activeHotel: hotel, comments, nearbyHotels, activeHotelReloaded} = useSelector((state) => state.USER);
+const ScreenRoom = ({id}) => {
+  const {hotels, activeHotel: hotel, comments, nearbyHotels, activeHotelReloaded} = useSelector((state) => state.USER);
 
   const dispatch = useDispatch();
   const getIDToServerRequest = (hotelID) => {
@@ -164,7 +163,6 @@ const ScreenRoom = ({id, hotels}) => {
 
 ScreenRoom.propTypes = {
   id: PropTypes.string.isRequired,
-  hotels: PropTypes.arrayOf(hotelStructure).isRequired,
 };
 
 export default ScreenRoom;

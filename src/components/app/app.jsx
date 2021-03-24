@@ -4,10 +4,17 @@ import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
 import {JumpTo, WarningType} from '../../utils/constants';
 import browserHistory from '../../browser-history';
 
-import {ScreenMain, ScreenLogin, ScreenFavorites, ScreenRoom, ScreenWarning, ScreenLoading, PrivateRoute} from '..';
+import {ScreenMain,
+  ScreenLogin,
+  ScreenFavorites,
+  ScreenRoom,
+  ScreenWarning,
+  ScreenLoading,
+  PrivateRoute,
+} from '..';
 
 const App = () => {
-  const {hotels, isHotelsLoaded} = useSelector((state) => state.USER);
+  const {isHotelsLoaded} = useSelector((state) => state.USER);
 
   if (!isHotelsLoaded) {
     return (
@@ -20,24 +27,23 @@ const App = () => {
       <Switch>
         <Route
           exact
-          path={JumpTo.ROOT}
-          render={() => <ScreenMain hotels={hotels} />} />
+          path={JumpTo.LOGIN}
+          component={ScreenLogin} />
 
         <Route
           exact
-          path={JumpTo.LOGIN}
-          component={ScreenLogin}
-        />
+          path={JumpTo.ROOT}
+          render={() => <ScreenMain/>} />
 
         <PrivateRoute
           exact
           path={JumpTo.FAVORITES}
-          render={({}) => <ScreenFavorites hotels={hotels}/>} />
+          render={() => <ScreenFavorites />} />
 
         <Route
           exact
           path={`${JumpTo.OFFER}/:id`}
-          render={({match}) => <ScreenRoom id={match.params.id} hotels={hotels}/>} />
+          render={({match}) => <ScreenRoom id={match.params.id} />} />
 
         <Route>
           <ScreenWarning warning={WarningType.INVALID_ADDRESS_BAR} />

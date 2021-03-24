@@ -1,15 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {setActiveCity} from '../../store/action';
 import {useSelector, useDispatch} from 'react-redux';
-import {hotelStructure} from '../../utils/types';
 import {CitiesList, RenderType} from '../../utils/constants';
 import {getFilteredHotels, getPlace} from '../../utils';
 
 import {Places, NoPlaces, Header} from '..';
 
-const ScreenMain = ({hotels}) => {
-  const {activeCity} = useSelector((state) => state.USER);
+const ScreenMain = () => {
+  const {hotels, activeCity} = useSelector((state) => state.USER);
   const hotelsFilteredByCity = getFilteredHotels(activeCity.name, hotels);
   const dispatch = useDispatch();
 
@@ -42,10 +40,6 @@ const ScreenMain = ({hotels}) => {
       </main>
     </div>
   );
-};
-
-ScreenMain.propTypes = {
-  hotels: PropTypes.arrayOf(hotelStructure).isRequired,
 };
 
 export default ScreenMain;

@@ -4,7 +4,7 @@ import {RenderType} from '../../utils/constants';
 import {hotelStructure} from '../../utils/types';
 import {getFavoriteHotelsCollection} from '../../utils';
 
-import HotelsList from '../hotels-list/hotels-list';
+import {HotelsList} from '..';
 
 const FavoriteList = ({favoriteHotels}) => {
 
@@ -34,7 +34,6 @@ const FavoriteList = ({favoriteHotels}) => {
 
 FavoriteList.propTypes = {
   favoriteHotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  onClickHotel: PropTypes.func.isRequired,
 };
 
 export default FavoriteList;

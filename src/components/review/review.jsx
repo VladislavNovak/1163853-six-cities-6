@@ -4,8 +4,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {AuthorizationStatus, LoadingStatus} from '../../utils/constants';
 import {reviewStructure} from '../../utils/types';
 import {setLastCommentLoadingStatus} from '../../store/action';
-import ReviewForm from '../review-form/review-form';
-import ReviewsList from '../reviews-list/reviews-list';
+
+import {ReviewsList, ReviewForm} from '..';
 
 const Review = ({
   comments,

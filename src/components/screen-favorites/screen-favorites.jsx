@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {hotelStructure} from '../../utils/types';
+import {useSelector} from 'react-redux';
 
 import {FavoriteList, Header} from '..';
 
-const ScreenFavorites = ({hotels}) => {
+const ScreenFavorites = () => {
+  const {hotels} = useSelector((state) => state.USER);
   const favoriteHotels = hotels.filter(({isFavorite}) => isFavorite);
 
   return (
@@ -32,10 +32,6 @@ const ScreenFavorites = ({hotels}) => {
       </footer>
     </div>
   );
-};
-
-ScreenFavorites.propTypes = {
-  hotels: PropTypes.arrayOf(hotelStructure).isRequired,
 };
 
 export default ScreenFavorites;
