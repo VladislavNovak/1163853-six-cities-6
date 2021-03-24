@@ -1,8 +1,9 @@
 import React from 'react';
-import {useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
+import browserHistory from '../../browser-history';
 import PropTypes from 'prop-types';
-import {RATING_MULTIPLIER, JumpTo} from '../../utils/constants';
+import {RATING_MULTIPLIER, JumpTo, AuthorizationStatus} from '../../utils/constants';
 import {highlightHotelID, refreshHotelDataLoadStatus} from '../../store/action';
 import {hotelStructure} from '../../utils/types';
 import {sendUpdatedFavoriteState} from '../../store/api-action';
@@ -15,12 +16,16 @@ const Hotel = ({
 }) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
   const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
-
+  const {authorizationStatus} = useSelector((state) => state.AUTH);
   const dispatch = useDispatch();
 
   const handleChangeFavoriteStatus = () => {
-    dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+    if (authorizationStatus === AuthorizationStatus.NO_AUTH) {
+      browserHistory.push(JumpTo.LOGIN);
+    } else {
+      dispatch(refreshHotelDataLoadStatus(false));
+      dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+    }
   };
 
   return (
@@ -48,7 +53,7 @@ const Hotel = ({
             alt={`${title} image`}/>
         </Link>
       </div>
-      <div className={`${isRenderFavoriteHotels && `favorites__card-info`} place-card__info`}>
+      <div className={`${isRenderFavoriteHotels ? `favorites__card-info` : null} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>
