@@ -5,7 +5,7 @@ import {
   loadComments,
   loadHotels,
   loadNearestHotels,
-  loadUserEmail,
+  loadUserInfo,
   redirectToRoute,
   refreshHotelData,
   refreshHotelDataLoadStatus,
@@ -55,7 +55,7 @@ export const checkAuth = () => (dispatch, _getState, api) => (
   api.get(ServerRequest.LOGIN)
     .then(({data}) => {
       dispatch(requireAuthorization(AuthorizationStatus.AUTH));
-      dispatch(loadUserEmail(data[`email`]));
+      dispatch(loadUserInfo(adapter(data)));
     })
     .catch(() => {})
 );
@@ -64,11 +64,17 @@ export const login = ({login: email, password}) => (dispatch, _getState, api) =>
   api.post(ServerRequest.LOGIN, {email, password})
     .then(({data}) => {
       dispatch(requireAuthorization(AuthorizationStatus.AUTH));
-      dispatch(loadUserEmail(data[`email`]));
+      dispatch(loadUserInfo(adapter(data)));
       dispatch(redirectToRoute(JumpTo.ROOT));
     })
 );
 
+const adapter = (data) => {
+  return {
+    userEmail: data[`email`],
+    userAvatar: data[`avatar_url`],
+  };
+};
 
 // Как это работает на примере асинхронного экшена fetchHotels.
 //    Это функция, которая возвращает другую функцию, которой thunk докидывает параметры dispatch, _getState, api
