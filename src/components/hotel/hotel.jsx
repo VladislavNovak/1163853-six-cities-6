@@ -15,7 +15,7 @@ const Hotel = ({
   isRenderNearestHotels,
 }) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
-  const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
+  const styleRating = {width: `${Math.round(Number(rating)) * RATING_MULTIPLIER}%`};
   const {authorizationStatus} = useSelector((state) => state.AUTH);
   const dispatch = useDispatch();
 
