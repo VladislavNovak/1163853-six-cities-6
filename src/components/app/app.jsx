@@ -21,41 +21,24 @@ const App = () => {
         <Route
           exact
           path={JumpTo.ROOT}
-          render={({history}) => {
-            return <ScreenMain
-              hotels={hotels}
-              onClickHotel={(id) => history.push(`${JumpTo.OFFER}/${id}`)}
-            />;
-          }}
-        />
+          render={() => <ScreenMain hotels={hotels} />} />
+
         <Route
           exact
           path={JumpTo.LOGIN}
           component={ScreenLogin}
         />
+
         <PrivateRoute
           exact
           path={JumpTo.FAVORITES}
-          render={({history}) => (
-            <ScreenFavorites
-              hotels={hotels}
-              onClickHotel={(id) => history.push(`${JumpTo.OFFER}/${id}`)}
-            />
-          )}
-        />
+          render={({}) => <ScreenFavorites hotels={hotels}/>} />
+
         <Route
           exact
           path={`${JumpTo.OFFER}/:id`}
-          render={({history, match}) => (
-            <ScreenRoom
-              id={match.params.id}
-              hotels={hotels}
-              onClickHotel={
-                (id) => history.push(`${JumpTo.OFFER}/${id}`)
-              }
-            />
-          )}
-        />
+          render={({match}) => <ScreenRoom id={match.params.id} hotels={hotels}/>} />
+
         <Route>
           <ScreenWarning warning={WarningType.INVALID_ADDRESS_BAR} />
         </Route>

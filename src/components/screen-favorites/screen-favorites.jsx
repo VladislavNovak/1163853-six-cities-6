@@ -4,7 +4,7 @@ import {hotelStructure} from '../../utils/types';
 
 import {FavoriteList, Header} from '..';
 
-const ScreenFavorites = ({hotels, onClickHotel}) => {
+const ScreenFavorites = ({hotels}) => {
   const favoriteHotels = hotels.filter(({isFavorite}) => isFavorite);
 
   return (
@@ -13,7 +13,7 @@ const ScreenFavorites = ({hotels, onClickHotel}) => {
       <main className={`page__main page__main--favorites ${!favoriteHotels.length && `page__main--favorites-empty`}`}>
         <div className="page__favorites-container container">
           {favoriteHotels.length
-            ? <FavoriteList favoriteHotels={favoriteHotels} onClickHotel={onClickHotel}/>
+            ? <FavoriteList favoriteHotels={favoriteHotels}/>
             : (
               <section className="favorites favorites--empty">
                 <h1 className="visually-hidden">Favorites (empty)</h1>
@@ -36,7 +36,6 @@ const ScreenFavorites = ({hotels, onClickHotel}) => {
 
 ScreenFavorites.propTypes = {
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  onClickHotel: PropTypes.func.isRequired,
 };
 
 export default ScreenFavorites;

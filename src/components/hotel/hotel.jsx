@@ -1,42 +1,27 @@
-import React, {useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React from 'react';
+import {useDispatch} from 'react-redux';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {RATING_MULTIPLIER} from '../../utils/constants';
+import {RATING_MULTIPLIER, JumpTo} from '../../utils/constants';
 import {highlightHotelID, refreshHotelDataLoadStatus} from '../../store/action';
 import {hotelStructure} from '../../utils/types';
-import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedFavoriteState} from '../../store/api-action';
-import HotelPicture from '../hotel-picture/hotel-picture';
+import {sendUpdatedFavoriteState} from '../../store/api-action';
 
 const Hotel = ({
   hotel,
   isRenderAllHotels,
   isRenderFavoriteHotels,
   isRenderNearestHotels,
-  onClickHotel,
 }) => {
   const {id, isPremium, title, preview, price, isFavorite, type, rating} = hotel;
   const styleRating = {width: `${Number(rating) * RATING_MULTIPLIER}%`};
 
-  const {activeHotelReloaded, activeHotel} = useSelector((state) => state.USER);
   const dispatch = useDispatch();
-
-  const getIDToServerRequest = (hotelID) => {
-    dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(fetchActiveHotel(hotelID));
-    dispatch(fetchComments(hotelID));
-    dispatch(fetchNearbyHotels(hotelID));
-  };
 
   const handleChangeFavoriteStatus = () => {
     dispatch(refreshHotelDataLoadStatus(false));
     dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
   };
-
-  useEffect(() => {
-    if (!activeHotelReloaded && activeHotel.id === id) {
-      getIDToServerRequest(id);
-    }
-  }, [activeHotelReloaded]);
 
   return (
     <article
@@ -49,15 +34,20 @@ const Hotel = ({
         isRenderFavoriteHotels && `favorites__card place-card` ||
         isRenderNearestHotels && `near-places__card place-card`}>
       {isPremium && isRenderAllHotels && (<div className="place-card__mark"><span>Premium</span></div>)}
-      <HotelPicture
-        id={id}
-        isRenderAllHotels={isRenderAllHotels}
-        isRenderFavoriteHotels={isRenderFavoriteHotels}
-        isRenderNearestHotels={isRenderNearestHotels}
-        preview={preview}
-        title={title}
-        getIDToServerRequest={getIDToServerRequest}
-        onClickHotel={onClickHotel} />
+      <div
+        className={
+          isRenderAllHotels && `cities__image-wrapper place-card__image-wrapper` ||
+          isRenderFavoriteHotels && `favorites__image-wrapper place-card__image-wrapper` ||
+          isRenderNearestHotels && `near-places__image-wrapper place-card__image-wrapper`}>
+        <Link to={`${JumpTo.OFFER}/${id}`}>
+          <img
+            className="place-card__image"
+            src={preview}
+            width={(isRenderAllHotels || isRenderNearestHotels) && `260` || isRenderFavoriteHotels && `150`}
+            height={(isRenderAllHotels || isRenderNearestHotels) && `200` || isRenderFavoriteHotels && `110`}
+            alt={`${title} image`}/>
+        </Link>
+      </div>
       <div className={`${isRenderFavoriteHotels && `favorites__card-info`} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
@@ -81,7 +71,7 @@ const Hotel = ({
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{title}</a>
+          <Link to={`${JumpTo.OFFER}/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>
@@ -94,7 +84,6 @@ Hotel.propTypes = {
   isRenderAllHotels: PropTypes.bool.isRequired,
   isRenderFavoriteHotels: PropTypes.bool.isRequired,
   isRenderNearestHotels: PropTypes.bool.isRequired,
-  onClickHotel: PropTypes.func.isRequired,
 };
 
 export default Hotel;

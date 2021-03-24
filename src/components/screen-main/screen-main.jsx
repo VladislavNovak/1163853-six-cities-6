@@ -8,7 +8,7 @@ import {getFilteredHotels, getPlace} from '../../utils';
 
 import {Places, NoPlaces, Header} from '..';
 
-const ScreenMain = ({hotels, onClickHotel}) => {
+const ScreenMain = ({hotels}) => {
   const {activeCity} = useSelector((state) => state.USER);
   const hotelsFilteredByCity = getFilteredHotels(activeCity.name, hotels);
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const ScreenMain = ({hotels, onClickHotel}) => {
             </ul>
           </section>
         </div>
-        {hotelsFilteredByCity.length ? <Places currentCity={activeCity} hotels={hotelsFilteredByCity} onClickHotel={onClickHotel} /> : <NoPlaces />}
+        {hotelsFilteredByCity.length ? <Places currentCity={activeCity} hotels={hotelsFilteredByCity} /> : <NoPlaces />}
       </main>
     </div>
   );
@@ -46,7 +46,6 @@ const ScreenMain = ({hotels, onClickHotel}) => {
 
 ScreenMain.propTypes = {
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  onClickHotel: PropTypes.func.isRequired,
 };
 
 export default ScreenMain;

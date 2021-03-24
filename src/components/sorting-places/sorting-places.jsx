@@ -8,7 +8,7 @@ import {getSortedHotels} from '../../utils';
 
 import {HotelsList} from '..';
 
-const SortingPlaces = ({currentCity, hotels, onClickHotel}) => {
+const SortingPlaces = ({currentCity, hotels}) => {
   const [isOptionsOpen, setIsOptionsOpen] = React.useState(false);
   const sortRef = useRef();
   const dispatch = useDispatch();
@@ -76,15 +76,13 @@ const SortingPlaces = ({currentCity, hotels, onClickHotel}) => {
       </form>
       <HotelsList
         hotels={sortedHotels}
-        renderType={RenderType.ALL_HOTELS}
-        onClickHotel={onClickHotel}/>
+        renderType={RenderType.ALL_HOTELS}/>
     </section>
   );
 };
 
 SortingPlaces.propTypes = {
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  onClickHotel: PropTypes.func.isRequired,
   currentCity: PropTypes.shape(cityStructure).isRequired,
 };
 

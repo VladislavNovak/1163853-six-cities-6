@@ -20,26 +20,19 @@ export const fetchHotels = () => (dispatch, _getState, api) => (
   })
 );
 
-export const fetchActiveHotel = (id) => (dispatch, _getState, api) => (
-  api.get(`${ServerRequest.HOTELS}/${id}`).then(({data}) => {
-    const hotel = adaptOneHotelToClient(data);
+export const fetchActualRoomInfo = (id) => (dispatch, _getState, api) => (
+  Promise.all([
+    api.get(`${ServerRequest.HOTELS}/${id}`),
+    api.get(`${ServerRequest.HOTELS}/${id}${ServerRequest.NEARBY}`),
+    api.get(`${ServerRequest.COMMENTS}/${id}`)
+  ]).then(([hotelReceived, nearbyHotelsReceived, commentsReceived]) => {
+    const hotel = adaptOneHotelToClient(hotelReceived.data);
+    const nearbyHotels = adaptAllHotelsToClient(nearbyHotelsReceived.data);
+    const comments = adaptAllCommentsToClient(commentsReceived.data);
     dispatch(refreshHotelData(hotel));
-    dispatch(refreshHotelDataLoadStatus(true));
-  })
-);
-
-export const fetchNearbyHotels = (id) => (dispatch, _getState, api) => (
-  api.get(`${ServerRequest.HOTELS}/${id}${ServerRequest.NEARBY}`).then(({data}) => {
-    const nearbyHotels = adaptAllHotelsToClient(data);
     dispatch(loadNearestHotels(nearbyHotels));
-  })
-);
-
-export const fetchComments = (id) => (dispatch, _getState, api) => (
-  api.get(`${ServerRequest.COMMENTS}/${id}`).then(({data}) => {
-    const comments = adaptAllCommentsToClient(data);
     dispatch(loadComments(comments));
-  })
+  }).then(() => dispatch(refreshHotelDataLoadStatus(true)))
 );
 
 export const sendUpdatedComment = ({id, comment, rating}) => (dispatch, _getState, api) => (

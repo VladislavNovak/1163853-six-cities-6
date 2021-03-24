@@ -5,14 +5,13 @@ import {hotelStructure, cityStructure} from '../../utils/types';
 
 import {Map, SortingPlaces} from '..';
 
-const Places = ({currentCity, hotels, onClickHotel}) => {
+const Places = ({currentCity, hotels}) => {
   return (
     <div className="cities">
       <div className="cities__places-container container">
         <SortingPlaces
           currentCity={currentCity}
-          hotels={hotels}
-          onClickHotel={onClickHotel}/>
+          hotels={hotels} />
         <Map
           mapType={MapType.MAIN_MAP}
           city={currentCity}
@@ -24,7 +23,6 @@ const Places = ({currentCity, hotels, onClickHotel}) => {
 
 Places.propTypes = {
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  onClickHotel: PropTypes.func.isRequired,
   currentCity: PropTypes.shape(cityStructure).isRequired,
 };
 

@@ -4,20 +4,18 @@ import {useSelector, useDispatch} from 'react-redux';
 import {hotelStructure} from '../../utils/types';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
 import {getPlace, isHotelIDFound} from '../../utils';
-import {fetchActiveHotel, fetchComments, fetchNearbyHotels, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
+import {fetchActualRoomInfo, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
 import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../store/action';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
-const ScreenRoom = ({id, hotels, onClickHotel}) => {
+const ScreenRoom = ({id, hotels}) => {
   const {activeHotel: hotel, comments, nearbyHotels, activeHotelReloaded} = useSelector((state) => state.USER);
 
   const dispatch = useDispatch();
   const getIDToServerRequest = (hotelID) => {
     dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(fetchActiveHotel(hotelID));
-    dispatch(fetchComments(hotelID));
-    dispatch(fetchNearbyHotels(hotelID));
+    dispatch(fetchActualRoomInfo(hotelID));
   };
 
   if (!isHotelIDFound(hotels, id)) {
@@ -25,10 +23,8 @@ const ScreenRoom = ({id, hotels, onClickHotel}) => {
   }
 
   useEffect(() => {
-    if (!activeHotelReloaded) {
-      getIDToServerRequest(id);
-    }
-  }, [activeHotelReloaded]);
+    getIDToServerRequest(id);
+  }, [id]);
 
   if (!activeHotelReloaded) {
     return <ScreenLoading />;
@@ -158,8 +154,7 @@ const ScreenRoom = ({id, hotels, onClickHotel}) => {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <HotelsList
               hotels={threeNearestHotels}
-              renderType={RenderType.NEAR_HOTELS}
-              onClickHotel={onClickHotel}/>
+              renderType={RenderType.NEAR_HOTELS} />
           </section>
         </div>
       </main>
@@ -170,7 +165,6 @@ const ScreenRoom = ({id, hotels, onClickHotel}) => {
 ScreenRoom.propTypes = {
   id: PropTypes.string.isRequired,
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  onClickHotel: PropTypes.func.isRequired,
 };
 
 export default ScreenRoom;
