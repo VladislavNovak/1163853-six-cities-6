@@ -14,7 +14,7 @@ export const getFavoriteHotelsCollection = (hotels) => hotels.reduce((total, hot
 export const getPlace = (hotels, selectedCityName) => {
   const finded = hotels.find((hotel) => hotel.cityName === selectedCityName);
 
-  return (finded) ? {name: finded.cityName, lat: finded.cityLatitude, lng: finded.cityLongitude, zoom: finded.zoom} : {name: selectedCityName, lat: 0, lng: 0, zoom: 0};
+  return (finded) ? {name: finded.cityName, lat: finded.cityLatitude, lng: finded.cityLongitude, zoom: finded.cityZoom} : {name: selectedCityName, lat: 0, lng: 0, zoom: 0};
 };
 
 export const getMatchingOffer = (hotels, {params}) => hotels.find(({id}) => id === params.id);
