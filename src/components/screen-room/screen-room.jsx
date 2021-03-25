@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
-import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
+import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus, AuthorizationStatus, JumpTo} from '../../utils/constants';
 import {isHotelIDFound} from '../../utils';
 import {fetchActualRoomInfo, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
 import {refreshHotelDataLoadStatus, setCommentLoadingStatus, setFavoriteLoadingStatus} from '../../store/action';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
+import browserHistory from '../../browser-history';
 
 const ScreenRoom = ({id}) => {
   const {hotels, activeHotel: hotel, comments, nearbyHotels, activeHotelReloaded, favoriteLoadingStatus} = useSelector((state) => state.USER);
+  const {authorizationStatus} = useSelector((state) => state.AUTH);
   const [buttonSVGDisabled, setButtonSVGDisabled] = useState(false);
   const dispatch = useDispatch();
 
@@ -44,9 +46,13 @@ const ScreenRoom = ({id}) => {
   };
 
   const handleChangeFavoriteStatus = () => {
-    setButtonSVGDisabled(true);
-    dispatch(setFavoriteLoadingStatus(LoadingStatus.SENT));
-    dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+    if (authorizationStatus === AuthorizationStatus.NO_AUTH) {
+      browserHistory.push(JumpTo.LOGIN);
+    } else {
+      setButtonSVGDisabled(true);
+      dispatch(setFavoriteLoadingStatus(LoadingStatus.SENT));
+      dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+    }
   };
 
   return (
