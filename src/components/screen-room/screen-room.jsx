@@ -1,29 +1,32 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 import {RATING_MULTIPLIER, RenderType, MapType, WarningType, LoadingStatus} from '../../utils/constants';
 import {isHotelIDFound} from '../../utils';
 import {fetchActualRoomInfo, sendUpdatedComment, sendUpdatedFavoriteState} from '../../store/api-action';
-import {refreshHotelDataLoadStatus, setLastCommentLoadingStatus} from '../../store/action';
+import {refreshHotelDataLoadStatus, setCommentLoadingStatus, setFavoriteLoadingStatus} from '../../store/action';
 
 import {HotelsList, Review, Map, Header, ScreenWarning, ScreenLoading} from '..';
 
 const ScreenRoom = ({id}) => {
-  const {hotels, activeHotel: hotel, comments, nearbyHotels, activeHotelReloaded} = useSelector((state) => state.USER);
-
+  const {hotels, activeHotel: hotel, comments, nearbyHotels, activeHotelReloaded, favoriteLoadingStatus} = useSelector((state) => state.USER);
+  const [buttonSVGDisabled, setButtonSVGDisabled] = useState(false);
   const dispatch = useDispatch();
-  const getIDToServerRequest = (hotelID) => {
-    dispatch(refreshHotelDataLoadStatus(false));
-    dispatch(fetchActualRoomInfo(hotelID));
-  };
 
   if (!isHotelIDFound(hotels, id)) {
     return <ScreenWarning warning={WarningType.INVALID_HOTEL_ID} />;
   }
 
   useEffect(() => {
-    getIDToServerRequest(id);
+    dispatch(refreshHotelDataLoadStatus(false));
+    dispatch(fetchActualRoomInfo(id));
   }, [id]);
+
+  useEffect(() => {
+    if (favoriteLoadingStatus === LoadingStatus.RECEIVED) {
+      setButtonSVGDisabled(false);
+    }
+  }, [favoriteLoadingStatus]);
 
   if (!activeHotelReloaded) {
     return <ScreenLoading />;
@@ -34,18 +37,15 @@ const ScreenRoom = ({id}) => {
   const threeNearestHotels = nearbyHotels.slice(0, 3);
 
   const sendCommentToServer = (comment) => {
-    dispatch(setLastCommentLoadingStatus(LoadingStatus.SENT));
-    return dispatch(sendUpdatedComment(comment));
-  };
-
-  const extendComment = (comment) => {
-    sendCommentToServer({...comment, id}).catch(() => {
-      dispatch(setLastCommentLoadingStatus(LoadingStatus.ERROR));
+    dispatch(setCommentLoadingStatus(LoadingStatus.SENT));
+    dispatch(sendUpdatedComment({...comment, id})).catch(() => {
+      dispatch(setCommentLoadingStatus(LoadingStatus.ERROR));
     });
   };
 
   const handleChangeFavoriteStatus = () => {
-    dispatch(refreshHotelDataLoadStatus(false));
+    setButtonSVGDisabled(true);
+    dispatch(setFavoriteLoadingStatus(LoadingStatus.SENT));
     dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
   };
 
@@ -73,6 +73,7 @@ const ScreenRoom = ({id}) => {
                 <button
                   onClick={handleChangeFavoriteStatus}
                   className={`property__bookmark-button ${isFavorite ? `property__bookmark-button--active` : ``} button`}
+                  disabled={buttonSVGDisabled}
                   type="button">
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"/>
@@ -124,7 +125,7 @@ const ScreenRoom = ({id}) => {
                 }
               </div>
               <Review
-                onSubmitSendComment={extendComment}
+                onSubmitSendComment={sendCommentToServer}
                 comments={comments} />
             </div>
           </div>

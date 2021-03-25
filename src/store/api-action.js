@@ -11,7 +11,8 @@ import {
   refreshHotelData,
   refreshHotelDataLoadStatus,
   requireAuthorization,
-  setLastCommentLoadingStatus,
+  setCommentLoadingStatus,
+  setFavoriteLoadingStatus,
 } from './action';
 
 export const fetchHotels = () => (dispatch, _getState, api) => (
@@ -40,7 +41,7 @@ export const sendUpdatedComment = ({id, comment, rating}) => (dispatch, _getStat
   api.post(`${ServerRequest.COMMENTS}/${id}`, {comment, rating}).then(({data}) => {
     const comments = adaptAllCommentsToClient(data);
     dispatch(loadComments(comments));
-    dispatch(setLastCommentLoadingStatus(LoadingStatus.RECEIVED));
+    dispatch(setCommentLoadingStatus(LoadingStatus.RECEIVED));
   })
 );
 
@@ -49,6 +50,7 @@ export const sendUpdatedFavoriteState = ({id, newFavoriteStatus: status}) => (di
     const hotel = adaptOneHotelToClient(data);
     dispatch(refreshHotelData(hotel));
     dispatch(refreshHotelDataLoadStatus(true));
+    dispatch(setFavoriteLoadingStatus(LoadingStatus.RECEIVED));
   })
 );
 

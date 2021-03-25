@@ -3,28 +3,23 @@ import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 import {AuthorizationStatus, LoadingStatus} from '../../utils/constants';
 import {reviewStructure} from '../../utils/types';
-import {setLastCommentLoadingStatus} from '../../store/action';
+import {setCommentLoadingStatus} from '../../store/action';
 
 import {ReviewsList, ReviewForm} from '..';
 
-const Review = ({
-  comments,
-  onSubmitSendComment,
-}) => {
+const Review = ({comments, onSubmitSendComment}) => {
   const [selectedStars, setSelectedStars] = useState(`0`);
   const [tale, setTale] = useState(``);
 
   const {authorizationStatus} = useSelector((state) => state.AUTH);
-  const {lastCommentLoadingStatus} = useSelector((state) => state.USER);
+  const {commentLoadingStatus} = useSelector((state) => state.USER);
   const dispatch = useDispatch();
 
   const handleChangeRadio = ({target}) => {
-    dispatch(setLastCommentLoadingStatus(LoadingStatus.DEFAULT));
     setSelectedStars(target.value);
   };
 
   const handleChangeTextarea = ({target}) => {
-    dispatch(setLastCommentLoadingStatus(LoadingStatus.DEFAULT));
     setTale(target.value);
   };
 
@@ -37,18 +32,18 @@ const Review = ({
   };
 
   useEffect(() => {
-    if (lastCommentLoadingStatus === LoadingStatus.RECEIVED) {
+    if (commentLoadingStatus === LoadingStatus.RECEIVED) {
       setTale(``);
       setSelectedStars(`0`);
-      dispatch(setLastCommentLoadingStatus(LoadingStatus.DEFAULT));
+      dispatch(setCommentLoadingStatus(LoadingStatus.DEFAULT));
     }
 
-    if (lastCommentLoadingStatus === LoadingStatus.ERROR) {
+    if (commentLoadingStatus === LoadingStatus.ERROR) {
       setTale(``);
       setSelectedStars(`0`);
     }
 
-  }, [lastCommentLoadingStatus]);
+  }, [commentLoadingStatus]);
 
   return (
     <section className="property__reviews reviews">
@@ -57,8 +52,8 @@ const Review = ({
         handleSubmit={handleSubmit}
         handleChangeRadio={handleChangeRadio}
         selectedStars={selectedStars}
-        handleChangeTextarea={handleChangeTextarea}
-        lastCommentLoadingStatus={lastCommentLoadingStatus}
+        onChangeTextarea={handleChangeTextarea}
+        commentLoadingStatus={commentLoadingStatus}
         tale={tale} />
       }
     </section>

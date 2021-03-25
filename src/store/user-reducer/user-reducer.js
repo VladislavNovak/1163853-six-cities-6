@@ -1,6 +1,18 @@
 import {getPlace, updatedHotelsList} from '../../utils';
 import {createReducer} from '@reduxjs/toolkit';
-import {highlightHotelID, loadComments, loadHotels, loadNearestHotels, loadUserInfo, refreshHotelData, refreshHotelDataLoadStatus, setActiveCity, setActiveSort, setLastCommentLoadingStatus} from '../action';
+import {
+  highlightHotelID,
+  loadComments,
+  loadHotels,
+  loadNearestHotels,
+  loadUserInfo,
+  refreshHotelData,
+  refreshHotelDataLoadStatus,
+  setActiveCity,
+  setActiveSort,
+  setCommentLoadingStatus,
+  setFavoriteLoadingStatus,
+} from '../action';
 import {CitiesList, SortType, LoadingStatus} from '../../utils/constants';
 
 const initialState = {
@@ -11,7 +23,8 @@ const initialState = {
   activeHotelReloaded: false,
   activeCity: null,
   comments: [],
-  lastCommentLoadingStatus: LoadingStatus.DEFAULT,
+  commentLoadingStatus: LoadingStatus.DEFAULT,
+  favoriteLoadingStatus: LoadingStatus.DEFAULT,
   highlightHotelID: ``,
   activeSort: SortType.POPULAR,
   userInfo: {},
@@ -38,8 +51,11 @@ const userReducer = createReducer(initialState, (builder) => {
   builder.addCase(loadComments, (state, action) => {
     state.comments = action.payload;
   });
-  builder.addCase(setLastCommentLoadingStatus, (state, action) => {
-    state.lastCommentLoadingStatus = action.payload;
+  builder.addCase(setCommentLoadingStatus, (state, action) => {
+    state.commentLoadingStatus = action.payload;
+  });
+  builder.addCase(setFavoriteLoadingStatus, (state, action) => {
+    state.favoriteLoadingStatus = action.payload;
   });
   builder.addCase(refreshHotelData, (state, action) => {
     state.activeHotel = action.payload;

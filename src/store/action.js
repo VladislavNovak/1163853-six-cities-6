@@ -6,7 +6,8 @@ export const ActionType = {
   REFRESH_HOTEL_DATA: `hotel/refreshHotelData`,
   REFRESH_HOTEL_DATA_LOAD_STATUS: `server/refreshHotelDataLoadStatus`,
   LOAD_COMMENTS: `server/loadComments`,
-  SET_LAST_COMMENT_LOADING_STATUS: `server/setLastCommentLoadingStatus`,
+  SET_COMMENT_LOADING_STATUS: `server/setCommentLoadingStatus`,
+  SET_FAVORITE_LOADING_STATUS: `server/setFavoriteLoadingStatus`,
   SET_ACTIVE_CITY: `screenMain/setActiveCity`,
   HIGHLIGHT_HOTEL_ID: `hotel/highlightHotelID`,
   SET_ACTIVE_SORT: `sortingPlaces/activeSort`,
@@ -22,7 +23,8 @@ export const refreshHotelData = createAction(ActionType.REFRESH_HOTEL_DATA, (hot
 export const refreshHotelDataLoadStatus = createAction(ActionType.REFRESH_HOTEL_DATA_LOAD_STATUS, (status) => ({payload: status}));
 export const setActiveCity = createAction(ActionType.SET_ACTIVE_CITY, (activeCity) => ({payload: activeCity}));
 export const loadComments = createAction(ActionType.LOAD_COMMENTS, (comments) => ({payload: comments}));
-export const setLastCommentLoadingStatus = createAction(ActionType.SET_LAST_COMMENT_LOADING_STATUS, (status) => ({payload: status}));
+export const setCommentLoadingStatus = createAction(ActionType.SET_COMMENT_LOADING_STATUS, (status) => ({payload: status}));
+export const setFavoriteLoadingStatus = createAction(ActionType.SET_FAVORITE_LOADING_STATUS, (status) => ({payload: status}));
 export const highlightHotelID = createAction(ActionType.HIGHLIGHT_HOTEL_ID, (id) => ({payload: id}));
 export const setActiveSort = createAction(ActionType.SET_ACTIVE_SORT, (sort) => ({payload: sort}));
 export const requireAuthorization = createAction(ActionType.REQUIRED_AUTHORIZATION, (status) => ({payload: status}));
