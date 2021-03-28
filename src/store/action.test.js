@@ -11,7 +11,6 @@ import {
   highlightHotelID,
   setActiveSort,
   requireAuthorization,
-  logout,
   redirectToRoute,
   loadUserInfo
 } from "./action";
@@ -72,10 +71,6 @@ describe(`Action creators work correctly`, () => {
 
   it(`tests the action. Getting authorization status`, () => {
     expect(requireAuthorization(status)).toEqual(getExpectedAction(ActionType.REQUIRED_AUTHORIZATION, status));
-  });
-
-  it(`tests the action. Logout status`, () => {
-    expect(logout(status)).toEqual(getExpectedAction(ActionType.LOGOUT, status));
   });
 
   it(`tests the action. Redirect to route`, () => {

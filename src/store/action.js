@@ -12,7 +12,6 @@ export const ActionType = {
   HIGHLIGHT_HOTEL_ID: `hotel/highlightHotelID`,
   SET_ACTIVE_SORT: `sortingPlaces/activeSort`,
   REQUIRED_AUTHORIZATION: `user/requireAuthorization`,
-  LOGOUT: `user/logout`,
   REDIRECT_TO_ROUTE: `screenLogin/REDIRECT_TO_ROUTE`,
   LOAD_USER_INFO: `server/loadUserInfo`,
 };
@@ -28,7 +27,6 @@ export const setFavoriteLoadingStatus = createAction(ActionType.SET_FAVORITE_LOA
 export const highlightHotelID = createAction(ActionType.HIGHLIGHT_HOTEL_ID, (id) => ({payload: id}));
 export const setActiveSort = createAction(ActionType.SET_ACTIVE_SORT, (sort) => ({payload: sort}));
 export const requireAuthorization = createAction(ActionType.REQUIRED_AUTHORIZATION, (status) => ({payload: status}));
-export const logout = createAction(ActionType.LOGOUT, (status) => ({payload: status}));
 export const redirectToRoute = createAction(ActionType.REDIRECT_TO_ROUTE, (url) => ({payload: url}));
 export const loadUserInfo = createAction(ActionType.LOAD_USER_INFO, (info) => ({payload: info}));
 
