@@ -137,28 +137,24 @@ describe(`Async operation work correctly`, () => {
 
   it(`Should get server data API for fetchActualRoomInfo`, () => {
     const id = 1;
-    const response1 = {data: rawHotel};
-    const response2 = {data: rawHotels};
-    const response3 = {data: rawComments};
-
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
-    const getActualRoomInfo = fetchActualRoomInfo({id});
+    const getActualRoomInfo = fetchActualRoomInfo(1);
 
     apiMock
       .onGet(`${ServerRequest.HOTELS}/${id}`)
-      .reply(HttpCode.OK, response1)
+      .reply(HttpCode.OK, rawHotel)
       .onGet(`${ServerRequest.HOTELS}/${id}${ServerRequest.NEARBY}`)
-      .reply(HttpCode.OK, response2)
+      .reply(HttpCode.OK, rawHotels)
       .onGet(`${ServerRequest.COMMENTS}/${id}`)
-      .reply(HttpCode.OK, response3);
+      .reply(HttpCode.OK, rawComments);
 
     return getActualRoomInfo(dispatch, () => {}, api)
       .then(() => {
-        const hotel = adaptOneHotelToClient(response1.data);
-        const nearbyHotels = adaptAllHotelsToClient(response2.data);
-        const comments = adaptAllCommentsToClient(response3.data);
-        expect(dispatch).toHaveBeenCalledTimes(3);
+        const hotel = adaptOneHotelToClient(rawHotel);
+        const nearbyHotels = adaptAllHotelsToClient(rawHotels);
+        const comments = adaptAllCommentsToClient(rawComments);
+        expect(dispatch).toHaveBeenCalledTimes(4);
         expect(dispatch).toHaveBeenNthCalledWith(1, {
           type: ActionType.REFRESH_HOTEL_DATA,
           payload: hotel
@@ -170,6 +166,10 @@ describe(`Async operation work correctly`, () => {
         expect(dispatch).toHaveBeenNthCalledWith(3, {
           type: ActionType.LOAD_COMMENTS,
           payload: comments
+        });
+        expect(dispatch).toHaveBeenNthCalledWith(4, {
+          type: ActionType.REFRESH_HOTEL_DATA_LOAD_STATUS,
+          payload: true
         });
       });
   });
