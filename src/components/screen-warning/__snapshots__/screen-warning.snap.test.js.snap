@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should ScreenWarning render correctly 1`] = `
+<div>
+  <div
+    class="sc-bdfBwQ dDvbHG"
+  >
+    <div
+      class="sc-gsTCUz gFObRd"
+    >
+      <div
+        class="sc-dlfnbm fRMjel"
+      >
+        <div
+          class="sc-hKgILt eRjvFP"
+        />
+        <h1
+          class="sc-eCssSg kxcsyR"
+        >
+          404
+        </h1>
+      </div>
+      <h2
+        class="sc-jSgupP kDwJh"
+      >
+        ...LOADING...
+      </h2>
+      <p
+        class="sc-gKsewC eCBzea"
+      >
+        The page you are looking for might have been removed had its name changed or is temporarily unavailable.
+      </p>
+      <a
+        class="sc-iBPRYJ flrGhZ"
+        href="/"
+      >
+        Вернуться на главную
+      </a>
+    </div>
+  </div>
+</div>
+`;

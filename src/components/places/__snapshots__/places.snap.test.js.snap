@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should Places render correctly 1`] = `
+<div>
+  <div
+    class="cities"
+  >
+    <div
+      class="cities__places-container container"
+    >
+      <sortingplaces />
+      <map
+        maptype="cities__map"
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -8,8 +8,7 @@ const Places = () => {
     <div className="cities">
       <div className="cities__places-container container">
         <SortingPlaces />
-        <Map
-          mapType={MapType.MAIN_MAP} />
+        <Map mapType={MapType.MAIN_MAP} />
       </div>
     </div>
   );

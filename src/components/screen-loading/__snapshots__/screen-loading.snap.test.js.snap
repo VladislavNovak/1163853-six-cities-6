@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should ScreenLoading render correctly 1`] = `
+<div>
+  <div
+    class="sc-fubCfw jVEaPA"
+  >
+    <p
+      style="font-family: monospace; text-align: center; font-size: 28px; color: rgb(30, 144, 255); line-height: 26px; font-weight: 700;"
+    >
+      ...LOADING...
+    </p>
+    <div
+      class="sc-pFZIQ edStyG"
+    />
+  </div>
+</div>
+`;

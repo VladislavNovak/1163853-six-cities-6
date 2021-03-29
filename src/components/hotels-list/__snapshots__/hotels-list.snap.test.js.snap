@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should HotelsList render correctly 1`] = `
+<div>
+  <div
+    class="cities__places-list places__list tabs__content"
+  >
+    <hotel
+      hotel="[object Object]"
+      rendertype="usual"
+    />
+  </div>
+</div>
+`;
