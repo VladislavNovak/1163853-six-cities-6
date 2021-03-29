@@ -51,7 +51,7 @@ const ScreenRoom = ({id}) => {
     } else {
       setButtonSVGDisabled(true);
       dispatch(setFavoriteLoadingStatus(LoadingStatus.SENT));
-      dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+      dispatch(sendUpdatedFavoriteState({id, status: Number(!isFavorite)}));
     }
   };
 

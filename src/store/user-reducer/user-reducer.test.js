@@ -1,13 +1,9 @@
+import {adaptAllHotelsToClient, adaptOneHotelToClient} from '../../services/hotelAdapter';
+import {adaptAllCommentsToClient} from '../../services/commentAdapter';
 import {getPlace} from "../../utils";
 import {CitiesList, LoadingStatus, SortType} from "../../utils/constants";
 import {ActionType} from "../action";
 import {userReducer} from "./user-reducer";
-
-// setActiveCity
-// highlightHotelID
-// setActiveSort
-// setCommentLoadingStatus
-// setFavoriteLoadingStatus
 
 const initState = {
   isHotelsLoaded: false,
@@ -24,50 +20,62 @@ const initState = {
   userInfo: {},
 };
 
-const adaptOneHotelToClient = () => ({
-  'id': `1`,
-  'cityName': `Paris`,
-  'cityLatitude': 0.325,
-  'cityLongitude': 0.563,
-  'cityZoom': 13,
-  'title': `Good`,
-  'images': [`url`],
-  'preview': `Preview`,
-  'isPremium': true,
-  'isFavorite': true,
-  'bedrooms': 2,
-  'adults': 1,
-  'price': 123,
-  'rating': `5`,
-  'description': `Good`,
-  'type': `Type`,
-  'hostName': `Name`,
-  'hostId': `2`,
-  'services': [`Services`],
-  'hostIsPro': false,
-  'hostAvatar': `Avatar`,
-  'latitude': 0.235,
-  'longitude': 0.563,
-  'zoom': 13,
+const hotel = {
+  "city": {
+    "name": `Paris`,
+    "location": {
+      "latitude": 48.85661,
+      "longitude": 2.351499,
+      "zoom": 13
+    }
+  },
+  "preview_image": `https://assets.htmlacademy.ru`,
+  "images": [`https://assets.htmlacademy.ru`],
+  "title": `The house among olive`,
+  "is_favorite": false,
+  "is_premium": true,
+  "rating": 3,
+  "type": `room`,
+  "bedrooms": 1,
+  "max_adults": 1,
+  "price": 169,
+  "goods": [`Breakfast`],
+  "host": {
+    "id": 25,
+    "name": `Angelina`,
+    "is_pro": true,
+    "avatar_url": `img/avatar-angelina.jpg`
+  },
+  "description": `Relax, rejuvenate`,
+  "location": {
+    "latitude": 48.83861,
+    "longitude": 2.350499,
+    "zoom": 16
+  },
+  "id": 1
+};
+
+const hotels = [hotel];
+
+const comment = ({
+  "id": 1,
+  "user": {
+    "id": 11,
+    "is_pro": false,
+    "name": `Jack`,
+    "avatar_url": `https://assets.htmlacademy.ru`
+  },
+  "rating": 3,
+  "comment": `Beautiful space, fantastic location and`,
+  "date": `2021-02-10T08:04:28.647Z`
 });
 
-const adaptOneCommentToClient = ({
-  'id': `1`,
-  'quote': `Good`,
-  'date': `3464575467`,
-  'rating': `5`,
-  'visitorId': `2`,
-  'visitorName': `Avatar`,
-  'visitorIsPro': false
-});
+const comments = [comment];
 
 const userAdapter = () => ({
   'userEmail': `email`,
   'userAvatar': `avatar_url`,
 });
-
-const adaptAllHotelsToClient = [adaptOneHotelToClient];
-const adaptAllCommentsToClient = [adaptOneCommentToClient];
 
 describe(`Reducers work correctly`, () => {
   it(`tests the reducer. Without additional parameters`, () => {
@@ -75,16 +83,18 @@ describe(`Reducers work correctly`, () => {
   });
 
   it(`tests the reducer. Load hotels`, () => {
+    const adaptedHotels = adaptAllHotelsToClient(hotels);
+
     const addAction = {
       type: ActionType.LOAD_HOTELS,
-      payload: adaptAllHotelsToClient
+      payload: adaptedHotels
     };
 
     expect(userReducer(initState, addAction)).toEqual({
       ...initState,
       isHotelsLoaded: true,
-      hotels: adaptAllHotelsToClient,
-      activeCity: getPlace(adaptAllHotelsToClient, CitiesList[0])});
+      hotels: adaptedHotels,
+      activeCity: getPlace(adaptedHotels, CitiesList[0])});
   });
 
   it(`tests the reducer. Load nearest hotels`, () => {
@@ -97,14 +107,16 @@ describe(`Reducers work correctly`, () => {
   });
 
   it(`tests the reducer. Refresh hotel data`, () => {
+    const adaptedHotel = adaptOneHotelToClient(hotel);
+
     const addAction = {
       type: ActionType.REFRESH_HOTEL_DATA,
-      payload: adaptOneHotelToClient
+      payload: adaptedHotel
     };
 
     expect(userReducer(initState, addAction)).toEqual({
       ...initState,
-      activeHotel: adaptOneHotelToClient,
+      activeHotel: adaptedHotel,
       hotels: []
     });
   });
@@ -128,12 +140,14 @@ describe(`Reducers work correctly`, () => {
   });
 
   it(`tests the reducer. Load comments`, () => {
+    const adaptedComments = adaptAllCommentsToClient(comments);
+
     const addAction = {
       type: ActionType.LOAD_COMMENTS,
-      payload: adaptAllCommentsToClient
+      payload: adaptedComments
     };
 
-    expect(userReducer(initState, addAction)).toEqual({...initState, comments: adaptAllCommentsToClient});
+    expect(userReducer(initState, addAction)).toEqual({...initState, comments: adaptedComments});
   });
 
   it(`tests the reducer. Highlight hotel ID`, () => {

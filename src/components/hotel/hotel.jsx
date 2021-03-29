@@ -45,7 +45,7 @@ const Hotel = ({hotel, renderType}) => {
       browserHistory.push(JumpTo.LOGIN);
     } else {
       dispatch(refreshHotelDataLoadStatus(false));
-      dispatch(sendUpdatedFavoriteState({id, newFavoriteStatus: Number(!isFavorite)}));
+      dispatch(sendUpdatedFavoriteState({id, status: Number(!isFavorite)}));
     }
   };
 

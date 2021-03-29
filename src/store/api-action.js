@@ -45,7 +45,7 @@ export const sendUpdatedComment = ({id, comment, rating}) => (dispatch, _getStat
   })
 );
 
-export const sendUpdatedFavoriteState = ({id, newFavoriteStatus: status}) => (dispatch, _getState, api) => (
+export const sendUpdatedFavoriteState = ({id, status}) => (dispatch, _getState, api) => (
   api.post(`${ServerRequest.FAVORITE}/${id}/${status}`).then(({data}) => {
     const hotel = adaptOneHotelToClient(data);
     dispatch(refreshHotelData(hotel));
