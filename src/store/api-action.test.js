@@ -2,9 +2,10 @@ import MockAdapter from 'axios-mock-adapter';
 import {createAPI} from '../services/api';
 import {adaptAllCommentsToClient} from '../services/commentAdapter';
 import {adaptAllHotelsToClient, adaptOneHotelToClient} from '../services/hotelAdapter';
-import {HttpCode, LoadingStatus, ServerRequest} from '../utils/constants';
+import {userAdapter} from '../services/userAdapter';
+import {HttpCode, LoadingStatus, ServerRequest, AuthorizationStatus, JumpTo} from '../utils/constants';
 import {ActionType} from './action';
-import {fetchActualRoomInfo, fetchHotels, sendUpdatedComment, sendUpdatedFavoriteState} from './api-action';
+import {checkAuth, fetchActualRoomInfo, fetchHotels, login, sendUpdatedComment, sendUpdatedFavoriteState} from './api-action';
 
 const api = createAPI(() => {});
 
@@ -54,6 +55,11 @@ const rawComment = ({
   "rating": 3,
   "comment": `Beautiful space, fantastic location and`,
   "date": `2021-02-10T08:04:28.647Z`
+});
+
+const rawUserInfo = ({
+  userEmail: `email`,
+  userAvatar: `avatar_url`,
 });
 
 const rawHotels = [rawHotel];
@@ -170,6 +176,59 @@ describe(`Async operation work correctly`, () => {
         expect(dispatch).toHaveBeenNthCalledWith(4, {
           type: ActionType.REFRESH_HOTEL_DATA_LOAD_STATUS,
           payload: true
+        });
+      });
+  });
+
+  it(`Should get server data API for checkAuth`, () => {
+    const apiMock = new MockAdapter(api);
+    const dispatch = jest.fn();
+    const checkAuthLoader = checkAuth();
+
+    apiMock
+      .onGet(ServerRequest.LOGIN)
+      .reply(200, rawUserInfo);
+
+    return checkAuthLoader(dispatch, () => {}, api)
+      .then(() => {
+        const userInfo = userAdapter(rawUserInfo);
+        expect(dispatch).toHaveBeenCalledTimes(2);
+        expect(dispatch).toHaveBeenNthCalledWith(1, {
+          type: ActionType.REQUIRED_AUTHORIZATION,
+          payload: AuthorizationStatus.AUTH,
+        });
+        expect(dispatch).toHaveBeenNthCalledWith(2, {
+          type: ActionType.LOAD_USER_INFO,
+          payload: userInfo,
+        });
+      });
+  });
+
+  it(`Should get server data API for login`, () => {
+    const apiMock = new MockAdapter(api);
+    const dispatch = jest.fn();
+    const fakeUser = {email: `test@test.ru`, password: `123456`};
+    const loginLoader = login(fakeUser);
+
+    apiMock
+      .onPost(JumpTo.LOGIN)
+      .reply(200, rawUserInfo);
+
+    return loginLoader(dispatch, () => {}, api)
+      .then(() => {
+        const userInfo = userAdapter(rawUserInfo);
+        expect(dispatch).toHaveBeenCalledTimes(3);
+        expect(dispatch).toHaveBeenNthCalledWith(1, {
+          type: ActionType.REQUIRED_AUTHORIZATION,
+          payload: AuthorizationStatus.AUTH,
+        });
+        expect(dispatch).toHaveBeenNthCalledWith(2, {
+          type: ActionType.LOAD_USER_INFO,
+          payload: userInfo,
+        });
+        expect(dispatch).toHaveBeenNthCalledWith(3, {
+          type: ActionType.REDIRECT_TO_ROUTE,
+          payload: JumpTo.ROOT,
         });
       });
   });
