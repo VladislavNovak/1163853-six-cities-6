@@ -1,15 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {setActiveCity} from '../../store/action';
 import {useSelector, useDispatch} from 'react-redux';
-import {hotelStructure} from '../../utils/types';
 import {CitiesList, RenderType} from '../../utils/constants';
 import {getFilteredHotels, getPlace} from '../../utils';
 
 import {Places, NoPlaces, Header} from '..';
 
-const ScreenMain = ({hotels, onClickHotel}) => {
-  const {activeCity} = useSelector((state) => state.USER);
+const ScreenMain = () => {
+  const {hotels, activeCity} = useSelector((state) => state.USER);
   const hotelsFilteredByCity = getFilteredHotels(activeCity.name, hotels);
   const dispatch = useDispatch();
 
@@ -24,12 +22,11 @@ const ScreenMain = ({hotels, onClickHotel}) => {
               {
                 CitiesList.map((currentCityName) => (
                   <li key={currentCityName} className="locations__item">
-                    <a
-                      onClick={(evt) => {
-                        evt.preventDefault();
-                        dispatch(setActiveCity(getPlace(hotels, currentCityName)));
-                      }}
-                      className={`locations__item-link tabs__item ${(activeCity.name === currentCityName) && `tabs__item--active`}`}>
+                    <a onClick={(evt) => {
+                      evt.preventDefault();
+                      dispatch(setActiveCity(getPlace(hotels, currentCityName)));
+                    }}
+                    className={`locations__item-link tabs__item ${(activeCity.name === currentCityName) && `tabs__item--active`}`}>
                       <span>{currentCityName}</span>
                     </a>
                   </li>
@@ -38,15 +35,10 @@ const ScreenMain = ({hotels, onClickHotel}) => {
             </ul>
           </section>
         </div>
-        {hotelsFilteredByCity.length ? <Places currentCity={activeCity} hotels={hotelsFilteredByCity} onClickHotel={onClickHotel} /> : <NoPlaces />}
+        {hotelsFilteredByCity.length ? <Places /> : <NoPlaces />}
       </main>
     </div>
   );
-};
-
-ScreenMain.propTypes = {
-  hotels: PropTypes.arrayOf(hotelStructure).isRequired,
-  onClickHotel: PropTypes.func.isRequired,
 };
 
 export default ScreenMain;

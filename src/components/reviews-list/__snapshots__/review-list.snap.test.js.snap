@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should ReviewsList render correctly 1`] = `
+<div>
+  <h2
+    class="reviews__title"
+  >
+    Reviews · 
+    <span
+      class="reviews__amount"
+    >
+      1
+    </span>
+  </h2>
+  <ul
+    class="reviews__list"
+  >
+    <li
+      class="reviews__item"
+    >
+      <div
+        class="reviews__user user"
+      >
+        <div
+          class="reviews__avatar-wrapper user__avatar-wrapper"
+        >
+          <img
+            alt="Reviews avatar"
+            class="reviews__avatar user__avatar"
+            height="54"
+            src="https://assets.htmlacademy.ru"
+            width="54"
+          />
+        </div>
+        <span
+          class="reviews__user-name"
+        >
+          Jack
+        </span>
+      </div>
+      <div
+        class="reviews__info"
+      >
+        <div
+          class="reviews__rating rating"
+        >
+          <div
+            class="reviews__stars rating__stars"
+          >
+            <span
+              style="width: 60%;"
+            />
+            <span
+              class="visually-hidden"
+            >
+              Rating
+            </span>
+          </div>
+        </div>
+        <p
+          class="reviews__text"
+        >
+          Beautiful space, fantastic location and
+        </p>
+        <time
+          class="reviews__time"
+          datetime="2021-02-10"
+        >
+          February 2021
+        </time>
+      </div>
+    </li>
+  </ul>
+</div>
+`;

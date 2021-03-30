@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should FavoriteList render correctly 1`] = `
+<div>
+  <section
+    class="favorites"
+  >
+    <h1
+      class="favorites__title"
+    >
+      Saved listing
+    </h1>
+    <ul
+      class="favorites__list"
+    >
+      <li
+        class="favorites__locations-items"
+      >
+        <div
+          class="favorites__locations locations locations--current"
+        >
+          <div
+            class="locations__item"
+          >
+            <a
+              class="locations__item-link"
+              href="#"
+            >
+              <span>
+                Paris
+              </span>
+            </a>
+          </div>
+        </div>
+        <hotelslist
+          hotels="[object Object]"
+          rendertype="favorite"
+        />
+      </li>
+    </ul>
+  </section>
+</div>
+`;

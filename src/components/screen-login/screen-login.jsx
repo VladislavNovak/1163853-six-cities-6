@@ -1,11 +1,13 @@
 import React, {useRef} from 'react';
-import {useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {login} from '../../store/api-action';
-import {REGULAR_EMAIL_TEMPLATE} from '../../utils/constants';
+import {Redirect} from 'react-router';
+import {AuthorizationStatus, JumpTo, REGULAR_EMAIL_TEMPLATE} from '../../utils/constants';
 
 import {Header} from '..';
 
 const ScreenLogin = () => {
+  const {authorizationStatus} = useSelector((state) => state.AUTH);
   const dispatch = useDispatch();
   const loginRef = useRef();
   const passwordRef = useRef();
@@ -20,6 +22,10 @@ const ScreenLogin = () => {
       }));
     }
   };
+
+  if (authorizationStatus === AuthorizationStatus.AUTH) {
+    return <Redirect to={JumpTo.ROOT} />;
+  }
 
   return (
     <div className="page page--gray page--login">

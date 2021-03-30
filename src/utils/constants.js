@@ -7,6 +7,11 @@ export const KeyCode = {
   ESC: `ESC`,
 };
 
+export const HttpCode = {
+  OK: 200,
+  UNAUTHORIZED: 401
+};
+
 export const MapType = {
   MAIN_MAP: `cities__map`,
   OFFER_MAP: `property__map`,
@@ -42,7 +47,7 @@ export const ServerRequest = {
 
 export const ReviewLength = {
   MIN: 49,
-  MAX: 300
+  MAX: 301
 };
 
 export const LoadingStatus = {

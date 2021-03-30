@@ -1,4 +1,4 @@
-import {SortType} from "./constants";
+import {RenderType, SortType} from "./constants";
 
 // Принимает массив отелей
 // Возвращает объект с ключами из городов и значениями из массивов гостиниц
@@ -9,15 +9,12 @@ export const getFavoriteHotelsCollection = (hotels) => hotels.reduce((total, hot
 }, {});
 
 // Получает перечень отелей и наименование города в виде строки
-// Если отелей нет, скорее всего, данные с сервера не загружены, тогда возвращает null
 // Возвращает полные данные города, извлеченные из первого обнаруженного отеля
+// Если отелей нет, скорее всего, данные с сервера не загружены, тогда возвращает наименование отеля с обнулёнными данными
 export const getPlace = (hotels, selectedCityName) => {
-  if (!hotels.length) {
-    return null;
-  }
+  const finded = hotels.find((hotel) => hotel.cityName === selectedCityName);
 
-  const {cityName: name, cityLatitude: lat, cityLongitude: lng, cityZoom: zoom} = hotels.find((hotel) => hotel.cityName === selectedCityName);
-  return {name, lat, lng, zoom};
+  return (finded) ? {name: finded.cityName, lat: finded.cityLatitude, lng: finded.cityLongitude, zoom: finded.cityZoom} : {name: selectedCityName, lat: 0, lng: 0, zoom: 0};
 };
 
 export const getMatchingOffer = (hotels, {params}) => hotels.find(({id}) => id === params.id);
@@ -55,3 +52,11 @@ export const isHotelIDFound = (hotels, id) => {
 export const updatedHotelsList = (hotels, update) => {
   return hotels.map((hotel) => hotel.id === update.id ? update : hotel);
 };
+
+// Получает тип рендера - constants/RenderType и набор стилей
+// Возвращает нужный стиль
+export const getMarkupStyle = (type, stilization) => ({
+  [RenderType.ALL_HOTELS]: stilization.ALL_HOTELS,
+  [RenderType.FAVORITE_HOTELS]: stilization.FAVORITE_HOTELS,
+  [RenderType.NEAR_HOTELS]: stilization.NEAR_HOTELS,
+})[type];

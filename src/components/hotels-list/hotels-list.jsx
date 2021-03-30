@@ -2,30 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {hotelStructure} from '../../utils/types';
 import Hotel from '../hotel/hotel';
-import {RenderType} from '../../utils/constants';
+import {getMarkupStyle} from '../../utils';
 
-const HotelsList = ({hotels, renderType, onClickHotel}) => {
-  const isRenderAllHotels = renderType === RenderType.ALL_HOTELS;
-  const isRenderFavoriteHotels = renderType === RenderType.FAVORITE_HOTELS;
-  const isRenderNearestHotels = renderType === RenderType.NEAR_HOTELS;
+const HotelsList = ({hotels, renderType}) => {
+  const PlacesListStyle = {
+    ALL_HOTELS: `cities__places-list places__list tabs__content`,
+    FAVORITE_HOTELS: `favorites__places`,
+    NEAR_HOTELS: `near-places__list places__list`,
+  };
 
   return (
-    <div className={
-      isRenderAllHotels && `cities__places-list places__list tabs__content` ||
-      isRenderFavoriteHotels && `favorites__places` ||
-      isRenderNearestHotels && `near-places__list places__list`}>
-      {
-        hotels.map((hotel) => {
-          const {id} = hotel;
-          return (
-            <Hotel key={id}
-              hotel={hotel}
-              isRenderAllHotels={isRenderAllHotels}
-              isRenderFavoriteHotels={isRenderFavoriteHotels}
-              isRenderNearestHotels={isRenderNearestHotels}
-              onClickHotel={onClickHotel}
-            />);
-        })
+    <div className={getMarkupStyle(renderType, PlacesListStyle)}>
+      {hotels.map((hotel) => (
+        <Hotel key={hotel.id}
+          hotel={hotel}
+          renderType={renderType} />))
       }
     </div>
   );
@@ -34,7 +25,6 @@ const HotelsList = ({hotels, renderType, onClickHotel}) => {
 HotelsList.propTypes = {
   hotels: PropTypes.arrayOf(hotelStructure).isRequired,
   renderType: PropTypes.string.isRequired,
-  onClickHotel: PropTypes.func.isRequired,
 };
 
 export default HotelsList;

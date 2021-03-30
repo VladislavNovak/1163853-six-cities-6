@@ -4,10 +4,17 @@ import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
 import {JumpTo, WarningType} from '../../utils/constants';
 import browserHistory from '../../browser-history';
 
-import {ScreenMain, ScreenLogin, ScreenFavorites, ScreenRoom, ScreenWarning, ScreenLoading, PrivateRoute} from '..';
+import {ScreenMain,
+  ScreenLogin,
+  ScreenFavorites,
+  ScreenRoom,
+  ScreenWarning,
+  ScreenLoading,
+  PrivateRoute,
+} from '..';
 
 const App = () => {
-  const {hotels, isHotelsLoaded} = useSelector((state) => state.USER);
+  const {isHotelsLoaded} = useSelector((state) => state.USER);
 
   if (!isHotelsLoaded) {
     return (
@@ -20,42 +27,24 @@ const App = () => {
       <Switch>
         <Route
           exact
-          path={JumpTo.ROOT}
-          render={({history}) => {
-            return <ScreenMain
-              hotels={hotels}
-              onClickHotel={(id) => history.push(`${JumpTo.OFFER}/${id}`)}
-            />;
-          }}
-        />
+          path={JumpTo.LOGIN}
+          component={ScreenLogin} />
+
         <Route
           exact
-          path={JumpTo.LOGIN}
-          component={ScreenLogin}
-        />
+          path={JumpTo.ROOT}
+          render={() => <ScreenMain/>} />
+
         <PrivateRoute
           exact
           path={JumpTo.FAVORITES}
-          render={({history}) => (
-            <ScreenFavorites
-              hotels={hotels}
-              onClickHotel={(id) => history.push(`${JumpTo.OFFER}/${id}`)}
-            />
-          )}
-        />
+          render={() => <ScreenFavorites />} />
+
         <Route
           exact
           path={`${JumpTo.OFFER}/:id`}
-          render={({history, match}) => (
-            <ScreenRoom
-              id={match.params.id}
-              hotels={hotels}
-              onClickHotel={
-                (id) => history.push(`${JumpTo.OFFER}/${id}`)
-              }
-            />
-          )}
-        />
+          render={({match}) => <ScreenRoom id={match.params.id} />} />
+
         <Route>
           <ScreenWarning warning={WarningType.INVALID_ADDRESS_BAR} />
         </Route>

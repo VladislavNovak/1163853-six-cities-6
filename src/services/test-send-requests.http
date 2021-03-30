@@ -1,6 +1,6 @@
 # GET https://6.react.pages.academy/six-cities/hotels HTTP/1.1
-# GET https://6.react.pages.academy/six-cities/comments/4 HTTP/1.1
-GET https://6.react.pages.academy/six-cities/hotels/2/nearby HTTP/1.1
+GET https://6.react.pages.academy/six-cities/comments/4 HTTP/1.1
+# GET https://6.react.pages.academy/six-cities/hotels/2/nearby HTTP/1.1
 
 # Authorization: Basic NS43cqsibarQ5EJ
 Content-Type: application/json

@@ -8,9 +8,9 @@ import {Logo} from '..';
 
 const Header = ({classNameForLogoLink}) => {
   const {authorizationStatus} = useSelector((state) => state.AUTH);
-  const {userEmail} = useSelector((state) => state.USER);
-  const path = (AuthorizationStatus.AUTH === authorizationStatus) ? JumpTo.ROOT : JumpTo.LOGIN;
-  const title = (AuthorizationStatus.AUTH === authorizationStatus) ? userEmail : `Sign in`;
+  const {userInfo} = useSelector((state) => state.USER);
+  const path = (AuthorizationStatus.AUTH === authorizationStatus) ? JumpTo.FAVORITES : JumpTo.LOGIN;
+  const title = (AuthorizationStatus.AUTH === authorizationStatus) ? userInfo.userEmail : `Sign in`;
 
   return (
     <header className="header">
@@ -23,8 +23,9 @@ const Header = ({classNameForLogoLink}) => {
                 <Link
                   to={path}
                   className="header__nav-link header__nav-link--profile">
-                  <div className="header__avatar-wrapper user__avatar-wrapper">
-                  </div>
+                  <div
+                    className="header__avatar-wrapper user__avatar-wrapper"
+                    style={{backgroundImage: `url(${userInfo.userAvatar})`, borderRadius: `50%`}} />
                   <span className="header__login">{title}</span>
                 </Link>
               </li>

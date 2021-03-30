@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FIVE_STARS, LoadingStatus, ReviewLength} from '../../utils/constants';
-import {Textarea} from './review-stile';
+import {Textarea} from './review-form.stile';
 
-const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, handleChangeTextarea, lastCommentLoadingStatus, tale}) => {
+const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, onChangeTextarea, commentLoadingStatus, tale}) => {
   const allowSendingForm = () => !(tale.length > ReviewLength.MIN && tale.length < ReviewLength.MAX && Number(selectedStars));
 
   return (
@@ -29,12 +29,12 @@ const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, handleChang
         ))}
       </div>
       <Textarea
-        warningStyle={(lastCommentLoadingStatus === LoadingStatus.ERROR) && `5px solid #FF0000`}
+        warningStyle={(commentLoadingStatus === LoadingStatus.ERROR) && `5px solid #FF0000`}
         id="review"
         name="review"
-        onChange={handleChangeTextarea}
+        onChange={onChangeTextarea}
         value={tale}
-        placeholder={(lastCommentLoadingStatus === LoadingStatus.ERROR)
+        placeholder={(commentLoadingStatus === LoadingStatus.ERROR)
           ? `The comment cannot be posted to the server at this time. The data may be incorrect. Or try next time`
           : `Tell how was your stay, what you like and what can be improved`} />
       <div className="reviews__button-wrapper">
@@ -43,7 +43,7 @@ const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, handleChang
         </p>
         <button
           className="reviews__submit form__submit button"
-          disabled={allowSendingForm() || lastCommentLoadingStatus === LoadingStatus.SENT}
+          disabled={allowSendingForm() || commentLoadingStatus === LoadingStatus.SENT}
           type="submit">Submit</button>
       </div>
     </form>
@@ -54,8 +54,8 @@ ReviewForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChangeRadio: PropTypes.func.isRequired,
   selectedStars: PropTypes.string.isRequired,
-  handleChangeTextarea: PropTypes.func.isRequired,
-  lastCommentLoadingStatus: PropTypes.string.isRequired,
+  onChangeTextarea: PropTypes.func.isRequired,
+  commentLoadingStatus: PropTypes.string.isRequired,
   tale: PropTypes.string.isRequired,
 };
 
