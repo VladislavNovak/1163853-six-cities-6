@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {FIVE_STARS, LoadingStatus, ReviewLength} from '../../utils/constants';
 import {Textarea} from './review-form.stile';
 
-const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, onChangeTextarea, commentLoadingStatus, tale}) => {
+const ReviewForm = ({handleSubmit, handleRadioChange, selectedStars, onChangeTextarea, commentLoadingStatus, tale}) => {
   const allowSendingForm = () => !(tale.length > ReviewLength.MIN && tale.length < ReviewLength.MAX && Number(selectedStars));
 
   return (
@@ -15,7 +15,7 @@ const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, onChangeTex
             <input
               className="form__rating-input visually-hidden"
               name="rating"
-              onChange={handleChangeRadio}
+              onChange={handleRadioChange}
               checked={selectedStars === star}
               value={star}
               id={`${star}-stars`}
@@ -52,7 +52,7 @@ const ReviewForm = ({handleSubmit, handleChangeRadio, selectedStars, onChangeTex
 
 ReviewForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  handleChangeRadio: PropTypes.func.isRequired,
+  handleRadioChange: PropTypes.func.isRequired,
   selectedStars: PropTypes.string.isRequired,
   onChangeTextarea: PropTypes.func.isRequired,
   commentLoadingStatus: PropTypes.string.isRequired,

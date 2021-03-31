@@ -40,7 +40,7 @@ const Hotel = ({hotel, renderType}) => {
   const {authorizationStatus} = useSelector((state) => state.AUTH);
   const dispatch = useDispatch();
 
-  const handleChangeFavoriteStatus = () => {
+  const handleFavoriteStatusChange = () => {
     if (authorizationStatus === AuthorizationStatus.NO_AUTH) {
       browserHistory.push(JumpTo.LOGIN);
     } else {
@@ -75,7 +75,7 @@ const Hotel = ({hotel, renderType}) => {
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
-            onClick={handleChangeFavoriteStatus}
+            onClick={handleFavoriteStatusChange}
             className={`place-card__bookmark-button ${isFavorite && `place-card__bookmark-button--active`} button`}
             type="button">
             <svg className="place-card__bookmark-icon" width="18" height="19">

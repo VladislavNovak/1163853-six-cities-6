@@ -15,11 +15,11 @@ const Review = ({comments, onSubmitSendComment}) => {
   const {commentLoadingStatus} = useSelector((state) => state.USER);
   const dispatch = useDispatch();
 
-  const handleChangeRadio = ({target}) => {
+  const handleRadioChange = ({target}) => {
     setSelectedStars(target.value);
   };
 
-  const handleChangeTextarea = ({target}) => {
+  const handleTextareaChange = ({target}) => {
     setTale(target.value);
   };
 
@@ -50,9 +50,9 @@ const Review = ({comments, onSubmitSendComment}) => {
       <ReviewsList comments={comments} />
       {authorizationStatus === AuthorizationStatus.AUTH && <ReviewForm
         handleSubmit={handleSubmit}
-        handleChangeRadio={handleChangeRadio}
+        handleRadioChange={handleRadioChange}
         selectedStars={selectedStars}
-        onChangeTextarea={handleChangeTextarea}
+        onChangeTextarea={handleTextareaChange}
         commentLoadingStatus={commentLoadingStatus}
         tale={tale} />
       }
