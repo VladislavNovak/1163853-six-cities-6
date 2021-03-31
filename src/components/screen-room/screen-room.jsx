@@ -62,8 +62,8 @@ const ScreenRoom = ({id}) => {
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              {images.map((image, index) => (
-                <div key={index} className="property__image-wrapper">
+              {images.map((image) => (
+                <div key={image} className="property__image-wrapper">
                   <img className="property__image" src={image} alt="Photo studio"/>
                 </div>))
               }
@@ -106,8 +106,8 @@ const ScreenRoom = ({id}) => {
               <div className="property__inside">
                 <h2 className="property__inside-title">What&apos;s inside</h2>
                 <ul className="property__inside-list">
-                  {services.map((service, index) => (
-                    <li key={`${service}-${index}`} className="property__inside-item">
+                  {services.map((service) => (
+                    <li key={service} className="property__inside-item">
                       {service}
                     </li>))
                   }
