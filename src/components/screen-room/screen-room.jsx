@@ -45,7 +45,7 @@ const ScreenRoom = ({id}) => {
     });
   };
 
-  const handleChangeFavoriteStatus = () => {
+  const handleFavoriteStatusChange = () => {
     if (authorizationStatus === AuthorizationStatus.NO_AUTH) {
       browserHistory.push(JumpTo.LOGIN);
     } else {
@@ -77,7 +77,7 @@ const ScreenRoom = ({id}) => {
                   {title}
                 </h1>
                 <button
-                  onClick={handleChangeFavoriteStatus}
+                  onClick={handleFavoriteStatusChange}
                   className={`property__bookmark-button ${isFavorite ? `property__bookmark-button--active` : ``} button`}
                   disabled={buttonSVGDisabled}
                   type="button">

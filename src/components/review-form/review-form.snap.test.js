@@ -8,7 +8,7 @@ test(`Should ReviewForm render correctly`, () => {
 
   const {container} = render(<ReviewForm
     handleSubmit={jest.fn()}
-    handleChangeRadio={jest.fn()}
+    handleRadioChange={jest.fn()}
     selectedStars={`5`}
     onChangeTextarea={jest.fn()}
     commentLoadingStatus={loadingStatus}

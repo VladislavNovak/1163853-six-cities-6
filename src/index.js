@@ -7,7 +7,9 @@ import {requireAuthorization} from './store/action';
 import {AuthorizationStatus} from './utils/constants';
 import {checkAuth, fetchHotels} from './store/api-action';
 import {createAPI} from './services/api';
+import {Router as BrowserRouter} from 'react-router-dom';
 import {redirect} from './store/middlewares/redirect';
+import browserHistory from "./browser-history";
 
 import App from './components/app/app';
 
@@ -29,7 +31,9 @@ Promise.all([
 ]).then(() => {
   ReactDOM.render(
       <Provider store={store}>
-        <App/>
+        <BrowserRouter history={browserHistory}>
+          <App/>
+        </BrowserRouter>
       </Provider>, document.querySelector(`#root`)
   );
 });

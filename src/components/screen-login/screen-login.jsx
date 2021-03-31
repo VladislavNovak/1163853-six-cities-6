@@ -15,7 +15,7 @@ const ScreenLogin = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    if (REGULAR_EMAIL_TEMPLATE.test(loginRef.current.value)) {
+    if (REGULAR_EMAIL_TEMPLATE.test(loginRef.current.value) && (passwordRef.current.value.length > 0)) {
       dispatch(login({
         login: loginRef.current.value,
         password: passwordRef.current.value,

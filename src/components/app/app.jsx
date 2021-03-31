@@ -1,8 +1,7 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 import {JumpTo, WarningType} from '../../utils/constants';
-import browserHistory from '../../browser-history';
 
 import {ScreenMain,
   ScreenLogin,
@@ -23,33 +22,31 @@ const App = () => {
   }
 
   return (
-    <BrowserRouter history={browserHistory}>
-      <Switch>
-        <Route
-          exact
-          path={JumpTo.LOGIN}
-          component={ScreenLogin} />
+    <Switch>
+      <Route
+        exact
+        path={JumpTo.LOGIN}
+        component={ScreenLogin} />
 
-        <Route
-          exact
-          path={JumpTo.ROOT}
-          render={() => <ScreenMain/>} />
+      <Route
+        exact
+        path={JumpTo.ROOT}
+        render={() => <ScreenMain/>} />
 
-        <PrivateRoute
-          exact
-          path={JumpTo.FAVORITES}
-          render={() => <ScreenFavorites />} />
+      <PrivateRoute
+        exact
+        path={JumpTo.FAVORITES}
+        render={() => <ScreenFavorites />} />
 
-        <Route
-          exact
-          path={`${JumpTo.OFFER}/:id`}
-          render={({match}) => <ScreenRoom id={match.params.id} />} />
+      <Route
+        exact
+        path={`${JumpTo.OFFER}/:id`}
+        render={({match}) => <ScreenRoom id={match.params.id} />} />
 
-        <Route>
-          <ScreenWarning warning={WarningType.INVALID_ADDRESS_BAR} />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+      <Route>
+        <ScreenWarning warning={WarningType.INVALID_ADDRESS_BAR} />
+      </Route>
+    </Switch>
   );
 };
 

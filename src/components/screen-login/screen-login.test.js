@@ -1,11 +1,10 @@
 import React from 'react';
 import {createMemoryHistory} from 'history';
 import {Router} from 'react-router-dom';
-import {render, screen} from '@testing-library/react';
+import {render} from '@testing-library/react';
 import * as redux from 'react-redux';
-import userEvent from '@testing-library/user-event';
 import configureStore from 'redux-mock-store';
-import {AuthorizationStatus, JumpTo} from '../../utils/constants';
+import {AuthorizationStatus} from '../../utils/constants';
 import ScreenLogin from './screen-login';
 
 const mockStore = configureStore({});
@@ -13,7 +12,7 @@ jest.mock(`../header/header`, () => `Header`);
 
 it(`Should ScreenLogin render correctly`, () => {
   const history = createMemoryHistory();
-  history.push(JumpTo.ROOT);
+  history.push(`/login`);
   jest.spyOn(redux, `useSelector`);
   jest.spyOn(redux, `useDispatch`);
 
@@ -24,9 +23,4 @@ it(`Should ScreenLogin render correctly`, () => {
         </Router>
       </redux.Provider>
   );
-
-  userEvent.type(screen.getByTestId(`login`), `xxx`);
-  userEvent.type(screen.getByTestId(`password`), `123456`);
-  expect(screen.getByDisplayValue(/xxx/i)).toBeInTheDocument();
-  expect(screen.getByDisplayValue(/123456/i)).toBeInTheDocument();
 });
