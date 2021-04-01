@@ -1,10 +1,11 @@
 import React from 'react';
 import {createMemoryHistory} from 'history';
 import {Router} from 'react-router-dom';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import * as redux from 'react-redux';
 import configureStore from 'redux-mock-store';
 import {AuthorizationStatus} from '../../utils/constants';
+import userEvent from '@testing-library/user-event';
 import ScreenLogin from './screen-login';
 
 const mockStore = configureStore({});
@@ -23,4 +24,13 @@ it(`Should ScreenLogin render correctly`, () => {
         </Router>
       </redux.Provider>
   );
+
+  expect(screen.getByText(/E-mail/i)).toBeInTheDocument();
+  expect(screen.getByText(/Password/i)).toBeInTheDocument();
+
+  userEvent.type(screen.getByTestId(`email`), `xxx`);
+  userEvent.type(screen.getByTestId(`password`), `123456`);
+
+  expect(screen.getByDisplayValue(/xxx/i)).toBeInTheDocument();
+  expect(screen.getByDisplayValue(/123456/i)).toBeInTheDocument();
 });
