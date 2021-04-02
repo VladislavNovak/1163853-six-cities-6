@@ -24,7 +24,8 @@ const SortingPlaces = () => {
     };
   }, []);
 
-  const handleOutsideClick = ({path}) => {
+  const handleOutsideClick = (evt) => {
+    const path = evt.path || (evt.composedPath && evt.composedPath());
     if (!path.includes(sortRef.current)) {
       setIsOptionsOpen(false);
     }
