@@ -5,12 +5,28 @@ import * as redux from 'react-redux';
 import configureStore from 'redux-mock-store';
 import {createMemoryHistory} from 'history';
 import App from './app';
-import {AuthorizationStatus, JumpTo, LoadingStatus, WarningType} from '../../utils/constants';
+import {AuthorizationStatus, JumpTo, LoadingStatus, SortType} from '../../utils/constants';
 const mockStore = configureStore({});
 
 describe(`Test routing`, () => {
   jest.spyOn(redux, `useSelector`);
   jest.spyOn(redux, `useDispatch`);
+
+  jest.mock(`../../store/user-reducer/user-reducer`, () => ({
+    isHotelsLoaded: false,
+    hotels: [],
+    nearbyHotels: [],
+    activeHotel: {},
+    activeHotelReloaded: false,
+    activeCity: null,
+    comments: [],
+    commentLoadingStatus: `DEFAULT`,
+    favoriteLoadingStatus: `DEFAULT`,
+    highlightHotelID: ``,
+    activeSort: `Popular`,
+    userInfo: {},
+  }));
+
 
   it(`Render 'ScreenMain' when user navigate to '/' url`, () => {
     const history = createMemoryHistory();
