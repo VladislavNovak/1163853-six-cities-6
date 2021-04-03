@@ -46,7 +46,7 @@ const ScreenLogin = () => {
                   className="login__input form__input"
                   type="email"
                   name="email"
-                  data-testid="login"
+                  data-testid="email"
                   placeholder="Email"
                   required=""/>
               </div>

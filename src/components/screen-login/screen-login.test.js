@@ -1,9 +1,10 @@
 import React from 'react';
 import {createMemoryHistory} from 'history';
 import {Router} from 'react-router-dom';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import * as redux from 'react-redux';
 import configureStore from 'redux-mock-store';
+import userEvent from '@testing-library/user-event';
 import {AuthorizationStatus} from '../../utils/constants';
 import ScreenLogin from './screen-login';
 
@@ -17,10 +18,19 @@ it(`Should ScreenLogin render correctly`, () => {
   jest.spyOn(redux, `useDispatch`);
 
   render(
-      <redux.Provider store={mockStore({AUTH: {authorizationStatus: AuthorizationStatus.AUTH}})}>
+      <redux.Provider store={mockStore({AUTH: {authorizationStatus: AuthorizationStatus.NO_AUTH}})}>
         <Router history={history}>
           <ScreenLogin />
         </Router>
       </redux.Provider>
   );
+
+  expect(screen.getByText(/E-mail/i)).toBeInTheDocument();
+  expect(screen.getByText(/Password/i)).toBeInTheDocument();
+
+  userEvent.type(screen.getByTestId(`email`), `xxx`);
+  userEvent.type(screen.getByTestId(`password`), `123456`);
+
+  expect(screen.getByDisplayValue(/xxx/i)).toBeInTheDocument();
+  expect(screen.getByDisplayValue(/123456/i)).toBeInTheDocument();
 });

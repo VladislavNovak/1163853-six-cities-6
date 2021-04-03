@@ -19,6 +19,7 @@ const ReviewForm = ({handleSubmit, handleRadioChange, selectedStars, onChangeTex
               checked={selectedStars === star}
               value={star}
               id={`${star}-stars`}
+              disabled={commentLoadingStatus === LoadingStatus.SENT}
               type="radio" />
             <label htmlFor={`${star}-stars`} className="reviews__rating-label form__rating-label" title="perfect">
               <svg className="form__star-image" width="37" height="33">
@@ -34,6 +35,7 @@ const ReviewForm = ({handleSubmit, handleRadioChange, selectedStars, onChangeTex
         name="review"
         onChange={onChangeTextarea}
         value={tale}
+        disabled={commentLoadingStatus === LoadingStatus.SENT}
         placeholder={(commentLoadingStatus === LoadingStatus.ERROR)
           ? `The comment cannot be posted to the server at this time. The data may be incorrect. Or try next time`
           : `Tell how was your stay, what you like and what can be improved`} />
