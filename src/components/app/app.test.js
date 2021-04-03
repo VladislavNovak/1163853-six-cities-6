@@ -5,7 +5,7 @@ import * as redux from 'react-redux';
 import configureStore from 'redux-mock-store';
 import {createMemoryHistory} from 'history';
 import App from './app';
-import {AuthorizationStatus, JumpTo, LoadingStatus} from '../../utils/constants';
+import {AuthorizationStatus, JumpTo, LoadingStatus, WarningType} from '../../utils/constants';
 const mockStore = configureStore({});
 
 describe(`Test routing`, () => {
@@ -92,9 +92,10 @@ describe(`Test routing`, () => {
   it(`Render 'NotFoundScreen' when user navigate to non-existent route`, () => {
     const history = createMemoryHistory();
     history.push(`/non-existent-route`);
+    const warning = `...LOADING...`;
 
     render(
-        <redux.Provider store={mockStore({})}>
+        <redux.Provider store={mockStore({warning})}>
           <Router history={history}>
             <App />
           </Router>
