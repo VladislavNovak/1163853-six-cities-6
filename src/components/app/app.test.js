@@ -5,11 +5,11 @@ import * as redux from 'react-redux';
 import configureStore from 'redux-mock-store';
 import {createMemoryHistory} from 'history';
 import {AuthorizationStatus, JumpTo} from '../../utils/constants';
-import { rawHotels, rawUserInfo } from '../mocks/mocks';
-import { adaptAllHotelsToClient } from '../../services/hotelAdapter';
+import {rawHotels, rawUserInfo} from '../mocks/mocks';
+import {adaptAllHotelsToClient} from '../../services/hotelAdapter';
 
 import App from './app';
-import { ScreenFavorites, ScreenLogin, ScreenRoom, ScreenWarning } from '..';
+import {ScreenFavorites, ScreenLogin, ScreenRoom, ScreenWarning} from '..';
 
 const mockStore = configureStore({});
 
@@ -31,7 +31,6 @@ describe(`Test routing`, () => {
     activeSort: `Popular`,
     userInfo: {},
   }));
-
 
   it(`Render 'ScreenMain' when user navigate to '/' url`, () => {
     const history = createMemoryHistory();
