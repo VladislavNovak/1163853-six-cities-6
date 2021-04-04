@@ -9,7 +9,7 @@ import {rawHotels, rawUserInfo} from '../mocks/mocks';
 import {adaptAllHotelsToClient} from '../../services/hotelAdapter';
 
 import App from './app';
-import {ScreenFavorites, ScreenLogin, ScreenRoom, ScreenWarning} from '..';
+import {ScreenFavorites, ScreenLogin, ScreenWarning} from '..';
 
 const mockStore = configureStore({});
 
@@ -90,25 +90,6 @@ describe(`Test routing`, () => {
     );
 
     expect(screen.getByText(`Nothing yet saved.`)).toBeInTheDocument();
-  });
-
-  it(`Render 'ScreenRoom' when user navigate to '/offer' url`, () => {
-    const history = createMemoryHistory();
-    history.push(`${JumpTo.OFFER}/1`);
-    const store = mockStore({
-      USER: {isHotelsLoaded: true, hotels: adaptAllHotelsToClient(rawHotels), userInfo: rawUserInfo},
-      AUTH: {authorizationStatus: AuthorizationStatus.AUTH}
-    });
-
-    render(
-        <redux.Provider store={store}>
-          <Router history={history}>
-            <ScreenRoom id={`1`} />
-          </Router>
-        </redux.Provider>
-    );
-
-    expect(screen.getByText(`Premium`)).toBeInTheDocument();
   });
 
   it(`Render 'NotFoundScreen' when user navigate to non-existent route`, () => {
