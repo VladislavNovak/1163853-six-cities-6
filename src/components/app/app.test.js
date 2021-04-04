@@ -4,8 +4,13 @@ import {render, screen} from '@testing-library/react';
 import * as redux from 'react-redux';
 import configureStore from 'redux-mock-store';
 import {createMemoryHistory} from 'history';
+import {AuthorizationStatus, JumpTo} from '../../utils/constants';
+import { rawHotels, rawUserInfo } from '../mocks/mocks';
+import { adaptAllHotelsToClient } from '../../services/hotelAdapter';
+
 import App from './app';
-import {AuthorizationStatus, JumpTo, LoadingStatus, SortType} from '../../utils/constants';
+import { ScreenFavorites, ScreenLogin, ScreenRoom, ScreenWarning } from '..';
+
 const mockStore = configureStore({});
 
 describe(`Test routing`, () => {
@@ -13,7 +18,7 @@ describe(`Test routing`, () => {
   jest.spyOn(redux, `useDispatch`);
 
   jest.mock(`../../store/user-reducer/user-reducer`, () => ({
-    isHotelsLoaded: false,
+    isHotelsLoaded: true,
     hotels: [],
     nearbyHotels: [],
     activeHotel: {},
@@ -33,7 +38,7 @@ describe(`Test routing`, () => {
     history.push(JumpTo.ROOT);
 
     const store = mockStore({
-      USER: {hotels: [], activeCity: null},
+      USER: {isHotelsLoaded: true, hotels: adaptAllHotelsToClient(rawHotels), activeCity: `Paris`, userInfo: rawUserInfo},
       AUTH: {authorizationStatus: AuthorizationStatus.NO_AUTH}
     });
 
@@ -51,34 +56,36 @@ describe(`Test routing`, () => {
   it(`Render 'ScreenLogin' when user navigate to '/login' url`, () => {
     const history = createMemoryHistory();
     history.push(JumpTo.LOGIN);
+
     const store = mockStore({
+      USER: {isHotelsLoaded: true, userInfo: rawUserInfo},
       AUTH: {authorizationStatus: AuthorizationStatus.NO_AUTH}
     });
 
     render(
         <redux.Provider store={store}>
           <Router history={history}>
-            <App />
+            <ScreenLogin />
           </Router>
         </redux.Provider>
     );
 
-    expect(screen.getByLabelText(/E-mail/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
+    expect(screen.getByText(/E-mail/i)).toBeInTheDocument();
+    expect(screen.getByText(/Password/i)).toBeInTheDocument();
   });
 
   it(`Render 'ScreenFavorites' when user navigate to '/favorites' url`, () => {
     const history = createMemoryHistory();
     history.push(JumpTo.FAVORITES);
     const store = mockStore({
-      USER: {hotels: []},
+      USER: {isHotelsLoaded: true, hotels: adaptAllHotelsToClient(rawHotels), userInfo: rawUserInfo},
       AUTH: {authorizationStatus: AuthorizationStatus.NO_AUTH}
     });
 
     render(
         <redux.Provider store={store}>
           <Router history={history}>
-            <App />
+            <ScreenFavorites />
           </Router>
         </redux.Provider>
     );
@@ -88,16 +95,16 @@ describe(`Test routing`, () => {
 
   it(`Render 'ScreenRoom' when user navigate to '/offer' url`, () => {
     const history = createMemoryHistory();
-    history.push(JumpTo.OFFER);
+    history.push(`${JumpTo.OFFER}/1`);
     const store = mockStore({
-      USER: {hotels: [], activeHotel: {}, comments: [], nearbyHotels: [], activeHotelReloaded: false, favoriteLoadingStatus: LoadingStatus.DEFAULT,},
-      AUTH: {authorizationStatus: AuthorizationStatus.NO_AUTH}
+      USER: {isHotelsLoaded: true, hotels: adaptAllHotelsToClient(rawHotels), userInfo: rawUserInfo},
+      AUTH: {authorizationStatus: AuthorizationStatus.AUTH}
     });
 
     render(
         <redux.Provider store={store}>
           <Router history={history}>
-            <App />
+            <ScreenRoom id={`1`} />
           </Router>
         </redux.Provider>
     );
@@ -108,12 +115,14 @@ describe(`Test routing`, () => {
   it(`Render 'NotFoundScreen' when user navigate to non-existent route`, () => {
     const history = createMemoryHistory();
     history.push(`/non-existent-route`);
-    const warning = `...LOADING...`;
+    const store = mockStore({
+      USER: {isHotelsLoaded: true}
+    });
 
     render(
-        <redux.Provider store={mockStore({warning})}>
+        <redux.Provider store={store}>
           <Router history={history}>
-            <App />
+            <ScreenWarning warning={`...LOADING...`} />
           </Router>
         </redux.Provider>
     );
